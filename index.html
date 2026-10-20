@@ -543,9 +543,9 @@ body.sq-admin-mode .app-shell{overflow:visible}
 :where(button,a,input,textarea,select,[tabindex]):focus-visible {outline:3px solid #18764b!important;outline-offset:3px!important}
 .access-note,.small,.tiny {line-height:1.55}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
-</style></head>
+</style><link rel="stylesheet" href="enhancements.css"><link rel="stylesheet" href="v12.css"></head>
 <body><div class="demo-ribbon" role="note"><span>Classroom demo · not an official reporting service</span><span>Fictional sample cases. Reports stay in this browser and are not sent to any government agency.</span></div>
-<section class="welcome-overlay" id="welcomeOverlay" aria-label="Welcome to SIDEQUEST"><div class="welcome-frame">
+<section class="welcome-overlay dismissed" id="welcomeOverlay" aria-label="Welcome to SIDEQUEST"><div class="welcome-frame">
   <div class="welcome-story"><div class="intro-top"><span class="intro-logo">✳ SIDE<span>QUEST</span></span></div><div class="intro-words"><h1>Report it.<br><em>See it through.</em></h1><p>Put a local concern on the map and follow what happens next.</p></div><div class="welcome-scene"><svg class="scene-svg" viewBox="0 0 620 425" role="img" aria-label="A cheerful imaginary Taft neighborhood with a path and community markers" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#d8e9ff"/><stop offset="1" stop-color="#f4ffdf"/></linearGradient><filter id="flt"><feDropShadow dx="0" dy="7" stdDeviation="5" flood-color="#537d76" flood-opacity=".18"/></filter></defs><rect width="620" height="425" rx="32" fill="url(#sky)"/><circle cx="510" cy="70" r="36" fill="#ffdf76"/><g fill="#fff" opacity=".84"><ellipse cx="113" cy="73" rx="63" ry="18"/><ellipse cx="139" cy="57" rx="30" ry="21"/><ellipse cx="349" cy="56" rx="67" ry="17"/><ellipse cx="357" cy="41" rx="31" ry="22"/></g><path d="M0 245Q105 203 194 241T403 219T620 223V425H0Z" fill="#a7e2a8"/><path d="M0 303Q120 276 229 296T455 282T620 296V425H0Z" fill="#70cba1"/><path d="M244 425C252 335 363 347 378 281C392 223 353 191 409 155" fill="none" stroke="#faedcf" stroke-width="75" stroke-linecap="round"/><path d="M244 425C252 335 363 347 378 281C392 223 353 191 409 155" fill="none" stroke="#d4bf9e" stroke-width="3" stroke-dasharray="5 10" stroke-linecap="round"/>
 <g filter="url(#flt)"><rect x="57" y="188" width="130" height="115" rx="11" fill="#fff1c8" stroke="#698b78" stroke-width="5"/><rect x="67" y="164" width="110" height="36" rx="12" fill="#b1aaf8"/><path d="M61 165l56-41 66 41" fill="#fbd6a3" stroke="#698b78" stroke-width="5" stroke-linejoin="round"/><rect x="108" y="236" width="32" height="67" rx="6" fill="#8aa5bd"/><rect x="73" y="216" width="22" height="23" rx="4" fill="#aaddec"/><rect x="153" y="216" width="22" height="23" rx="4" fill="#aaddec"/><text x="122" y="190" text-anchor="middle" font-size="12" font-weight="900" fill="#374d46">TAFT HUB</text></g>
 <g filter="url(#flt)"><rect x="446" y="207" width="116" height="105" rx="8" fill="#ffe4d4" stroke="#718e7d" stroke-width="5"/><path d="M436 208l69-63 67 63Z" fill="#ec9d86" stroke="#718e7d" stroke-width="5"/><rect x="491" y="255" width="26" height="57" rx="5" fill="#b2abed"/><rect x="453" y="233" width="28" height="25" rx="4" fill="#c5f1ef"/><rect x="527" y="233" width="27" height="25" rx="4" fill="#c5f1ef"/><text x="505" y="195" font-size="11" font-weight="900" fill="#375047" text-anchor="middle">COMMUNITY</text></g>
@@ -594,7 +594,7 @@ function publicUser(u){return u?{id:u.id,alias:u.alias,role:u.role,xp:u.xp,csrf:
 function fail(msg){throw new Error(msg)}
 function requireUser(){let u=current();if(!u)fail('Sign in with a demo profile to continue.');return u}
 function requireAdmin(){let u=requireUser();if(u.role!=='admin')fail('Coordinator demo profile required.');return u}
-function exposeReport(r){let {owner_id,...rest}=r;return typeof structuredClone==='function'?structuredClone(rest):JSON.parse(JSON.stringify(rest))}
+function exposeReport(r){let {owner_id,privateNotes,...rest}=r;return typeof structuredClone==='function'?structuredClone(rest):JSON.parse(JSON.stringify(rest))}
 function reward(u,sourceType,sourceId,pts){let d=loadDB();if(d.rewards.some(r=>r.user_id===u.id&&r.source_type===sourceType&&r.source_id===sourceId))return;d.rewards.push({user_id:u.id,source_type:sourceType,source_id:sourceId,points:pts,created:stamp()});u.xp+=pts}
 function addHistory(r,status,note,actor){r.status=status;r.updated=stamp();r.history.push({status,note,actor,created:stamp()})}
 function viewable(r,u){return PUBLIC_STAT.includes(r.status)||Boolean(u&&(u.role==='admin'||r.owner_id===u.id))}
@@ -926,7 +926,7 @@ if(e.target.id==='customizeForm'){e.preventDefault();savePrefs({avatar:selectedA
 // Load Leaflet without blocking the app when a CDN is unavailable. CARTO/OSM street tiles require internet, with an embedded animated offline map.
 // Offline illustrated map stays on-screen; no third-party map tiles are loaded.
 // On load, require the welcome screen for logged-out explorers. Returning users retain their browser-local session.
-setTimeout(()=>{applyPrefs();welcomeMode('login');if(state.user){welcomeShown(false)}else{welcomeShown(true)}},140);
+setTimeout(()=>{applyPrefs();welcomeMode('login');if(state.user){welcomeShown(false)}else{welcomeShown(false)}},140);
 </script><script id="sidequest-v9-runtime">
 /* V9: deliberate quality-of-life improvements for the standalone classroom demo. */
 async function sidequestPhotoPreview(file){
@@ -1035,4 +1035,4 @@ const sqOldNotifyV10=notify;
 notify=function(message,bad=false){const host=document.getElementById('toasts');if(host){while(host.children.length>=2)host.firstElementChild.remove()}sqOldNotifyV10(message,bad)};
 // If reloaded on #admin with an existing coordinator session, restore workspace styling.
 setTimeout(()=>{if(state.page==='admin'&&state.user?.role==='admin'){document.body.classList.add('sq-admin-mode');render().catch(()=>{})}},210);
-</script></body></html>
+</script><script src="enhancements.js"></script><script src="v12.js"></script></body></html>
