@@ -1,6 +1,6 @@
 # SIDEQUEST · Taft Radar
 
-**V13.1 map-launch fix | integrated street-map classroom prototype | Student web development project**
+**V13.2 bounded street map | integrated street-map classroom prototype | Student web development project**
 
 SIDEQUEST is a browser-based demonstration of citizen reporting for non-emergency concerns in selected public spaces around **Taft–Vito Cruz, Manila**. It is **not** operated by a government agency, is not an emergency service, and does **not** send real submissions to public authorities.
 
@@ -95,3 +95,9 @@ Integrated Leaflet/OpenStreetMap report maps, category-marker popups, landmark n
 ## Design direction
 
 Friendly mint/cream/lavender styling, purposeful map interactions, readable spacing, optional pastel themes, a simple original mascot and an **original neighborhood-rooftop Guardian** unlock. The urban guardian motif is inspired by street-level stories; there are **no licensed Marvel characters, logos or images** in this project.
+
+## V13.2 - Locked pilot coverage
+
+Maps are restricted to the existing proposed Taft-Vito Cruz pilot rectangle: southwest 14.552, 120.985; northeast 14.574, 121.003. It includes the existing Vito Cruz, Benilde-DLSU, Ocampo, Arellano, and Rizal Memorial sample landmarks. This is a project coverage choice, not an official administrative boundary.
+
+Hard pan limits, viewport-dependent minimum zoom, no world wrapping, bounded tile loading, and a dashed coverage outline apply to Home, Explore, and report maps. Resizing recalculates the zoom limit. Location clicks and dragged pins outside coverage are rejected by the existing coordinate validation. If an official pilot boundary is agreed later, update coverage consistently in the map, form/GPS validation, and demo API.

@@ -44,6 +44,7 @@ mapHTML=function(id='mainMap',pick=false){
  const options=PLACES.map((p,i)=>`<option value="${i}">${escape(p[0])}</option>`).join('');
  return `<section class="sq-live-map" id="${escape(id)}" data-pick="${pick?'yes':'no'}" aria-label="Taft–Vito Cruz interactive street map">
   <div class="sq-map-toolbar"><label>Find a pilot landmark<select data-sq-map-place><option value="">Choose a place…</option>${options}</select></label><button type="button" data-sq-map-reset>Reset view</button>${pick?'<button type="button" data-sq-map-clear>Clear pin</button>':'<button type="button" data-sq-map-refresh>Refresh reports</button>'}</div>
+  <p class="sq-map-boundary-label">Taft–Vito Cruz pilot area · Map movement and pins limited to this proposed coverage</p>
   <div class="sq-map-help"><details><summary>Map not loading?</summary><p>Extract the complete project and run START_SIDEQUEST.bat on Windows, or run <code>python start_sidequest.py</code>. You can also use VS Code Live Server or GitHub Pages. Opening index.html as a file does not send the website referrer required by the tile service. If a hosted page is still blocked, check browser privacy/referrer settings or contact the map provider; report markers alone do not prove the basemap loaded.</p><a href="https://www.openstreetmap.org/#map=16/14.56349/120.99465" target="_blank" rel="noopener">Open OpenStreetMap separately</a></details></div>
   <div class="sq-leaflet-canvas" id="${escape(id)}-canvas" aria-label="${pick?'Tap the map to choose a report location':'Street map with report markers'}"></div>
   <p class="sq-map-message" role="status" aria-live="polite">${pick?'Tap to select a point; drag the pin to adjust. Area and landmark are still required.':'Online street map · Sample report data in this browser. Dotted pins are your private pending reports.'}</p>
@@ -81,6 +82,15 @@ function dispose(id,entry){
  try{views.set(id,{center:entry.map.getCenter(),zoom:entry.map.getZoom()});entry.observer?.disconnect();entry.map.remove()}catch(_){}
  maps.delete(id);
 }
+function lockViewport(map){
+ // inside=true chooses the minimum zoom at which the viewport fits INSIDE coverage.
+ // This differs from fitBounds, which can expose large areas outside the pilot.
+ const size=map.getSize();if(!size.x||!size.y)return;
+ const minimum=Math.min(19,Math.max(14,map.getBoundsZoom(BOUNDS,true)));
+ map.setMinZoom(minimum);
+ if(map.getZoom()<minimum)map.setZoom(minimum,{animate:false});
+ map.panInsideBounds(BOUNDS,{animate:false});
+}
 initMaps=function(){
  // The base app may finish its first asynchronous render before external scripts load.
  // Upgrade those already-rendered maps without replacing form fields or drafts.
@@ -89,10 +99,12 @@ initMaps=function(){
  if(!window.L){document.querySelectorAll('.sq-map-message').forEach(p=>{p.textContent='Map library unavailable. Reload the complete extracted project; reporting by area and landmark still works.';p.dataset.error='yes'});return}
  document.querySelectorAll('.sq-live-map').forEach(host=>{
   const id=host.id;let e=maps.get(id);
-  if(e){e.map.invalidateSize({pan:false});if(e.pick)drawPick(e);else drawReports(e);return}
+  if(e){e.map.invalidateSize({pan:false});lockViewport(e.map);if(e.pick)drawPick(e);else drawReports(e);return}
   const canvas=host.querySelector('.sq-leaflet-canvas'),pick=host.dataset.pick==='yes';
-  const map=L.map(canvas,{scrollWheelZoom:false,zoomControl:true,maxBounds:BOUNDS,maxBoundsViscosity:.8,minZoom:14,maxZoom:19});
+  const map=L.map(canvas,{scrollWheelZoom:false,zoomControl:true,maxBounds:BOUNDS,maxBoundsViscosity:1,minZoom:14,maxZoom:19});
   const saved=views.get(id);map.setView(saved?.center||CENTER,saved?.zoom||16);
+  lockViewport(map);
+  L.rectangle(BOUNDS,{color:'#286148',weight:3,dashArray:'7 5',fill:false,interactive:false}).addTo(map);
   e={map,host,pick,reports:L.layerGroup().addTo(map),marker:null};maps.set(id,e);
   // Visible attribution, normal browser caching, no tile prefetching or offline download.
   // file:// cannot supply a valid HTTP Referer. Do not request tiles in that mode.
@@ -101,18 +113,18 @@ initMaps=function(){
    message(e,'Street map paused: this page was opened as a local file. Close it and run START_SIDEQUEST.bat, or use VS Code Live Server / GitHub Pages. Reports and manual location entry still work.',true);
    host.querySelector('.sq-map-help details').open=true;
   }
-  const tiles=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,referrerPolicy:'strict-origin-when-cross-origin',attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>'});
+  const tiles=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,noWrap:true,bounds:BOUNDS,referrerPolicy:'strict-origin-when-cross-origin',attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>'});
   let errors=0,loaded=0;
   tiles.on('tileerror',()=>{errors++;if(errors>=3&&!loaded){message(e,'Street tiles could not load or the provider blocked access. Open “Map not loading?” above. Reports remain available in the list.',true);host.querySelector('.sq-map-help details').open=true}});
   tiles.on('tileload',()=>{loaded++;if(host.querySelector('.sq-map-message').dataset.error==='yes')message(e,pick?'Tap the map to select a point.':'Online street map · Browser-local sample reports.')});
   if(hosted)tiles.addTo(map);
   host.querySelector('[data-sq-map-place]').addEventListener('change',event=>{if(event.target.value==='')return;const p=PLACES[Number(event.target.value)];if(p)map.setView([p[1],p[2]],18)});
-  host.querySelector('[data-sq-map-reset]').addEventListener('click',()=>{map.setView(CENTER,16);host.querySelector('select').value=''});
+  host.querySelector('[data-sq-map-reset]').addEventListener('click',()=>{map.setView(CENTER,Math.max(16,map.getMinZoom()));lockViewport(map);host.querySelector('select').value=''});
   if(pick){
    map.on('click',event=>pickChanged(event.latlng.lat,event.latlng.lng));drawPick(e);
    host.querySelector('[data-sq-map-clear]').addEventListener('click',()=>{state.pick={lat:null,lng:null};for(const v of maps.values())if(v.pick){drawPick(v);message(v,'No map pin selected. Area and landmark entry are still available.')}for(const key of ['pinSelected','pinSelectedMobile']){const n=document.getElementById(key);if(n)n.textContent='No pin selected'}});
   }else{drawReports(e);host.querySelector('[data-sq-map-refresh]').addEventListener('click',()=>refreshLocal(true))}
-  if(window.ResizeObserver){e.observer=new ResizeObserver(()=>{if(host.isConnected)map.invalidateSize({pan:false})});e.observer.observe(canvas)}
+  if(window.ResizeObserver){e.observer=new ResizeObserver(()=>{if(host.isConnected){map.invalidateSize({pan:false});lockViewport(map)}});e.observer.observe(canvas)}
   map.on('moveend',()=>views.set(id,{center:map.getCenter(),zoom:map.getZoom()}));
  });
 };
@@ -147,6 +159,6 @@ async function refreshLocal(manual=false){
 window.addEventListener('storage',event=>{if(event.key===DB_KEY)refreshLocal(false)});
 window.addEventListener('online',()=>{for(const e of maps.values())e.map.eachLayer(layer=>{if(layer instanceof L.TileLayer)layer.redraw()})});
 // Small public testing surface; no report payloads or private identities are exposed here.
-window.SIDEQUEST_MAP={inPilot,reportLocation,filterReports,refresh:()=>refreshLocal(true)};
+window.SIDEQUEST_MAP={inPilot,reportLocation,filterReports,lockViewport,refresh:()=>refreshLocal(true)};
  initMaps();
 })();

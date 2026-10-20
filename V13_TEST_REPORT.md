@@ -25,3 +25,6 @@ Visual browser testing and external tile rendering were unavailable in this sess
 - Three HTTP launcher checks passed: index.html, Leaflet JS, and live-map.js all return 200 and the configured Referrer-Policy header. The test server was stopped after checking.
 - The 18 map logic checks and 5 existing API/storage checks passed again.
 - Actual provider acceptance and street imagery were not visually verified. The screenshot alone cannot distinguish file/referrer, network, privacy-extension, or provider-level enforcement.
+
+## V13.2 boundary checks
+22 DOM/map-logic checks and 5 API/storage checks passed. Four additional checks cover hard pan-lock configuration, minimum zoom enforcement, the visible rectangle, and noWrap/bounded tile options. Existing out-of-area coordinate validation remains tested. Tests use a Leaflet test double; real Leaflet pan/zoom behavior and mobile resizing still need a manual browser check.

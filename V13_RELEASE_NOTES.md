@@ -28,3 +28,10 @@ See V13_TEST_REPORT.md. Optional repeatable logic checks: npm install, then npm 
 ## V13.1 - OSM access-blocked launch fix
 
 The screenshot shows an OSM access-blocked tile response. A likely cause for the previously recommended double-click launch is the missing HTTP Referer from file URLs; the image alone does not establish the provider's exact blocking rule. V13.1 adds an HTTP launcher, origin-preserving referrer policies, a file-URL tile request guard, and persistent map troubleshooting guidance. Provider/network/privacy blocks can still occur on a hosted origin and cannot be removed by this application. No proxy, tile-server rotation, forged referrer, cache bypass, or retry loop was added.
+
+## V13.2 - Locked pilot area
+- Hard maxBounds viscosity (1), responsive minimum zoom calculated with getBoundsZoom(bounds, true), and panInsideBounds enforcement.
+- Visible dashed coverage rectangle and coverage label.
+- noWrap and tile bounds restrict map tile coverage.
+- Reset view respects the zoom limit.
+- Coverage coordinates retain the existing map/API validation rectangle; no new official boundary is claimed.
