@@ -2,7 +2,7 @@
 
 **For non-emergency concerns in the proposed Taft–Vito Cruz pilot area.** This prototype is not an official reporting service. Use invented sample information.
 
-1. **Explore before signing in.** Open Home or Area Map. Search a landmark and inspect public sample issues. Use List view when the illustrated map is difficult to navigate.
+1. **Explore before signing in.** Open Home or Area Map. Search a landmark and inspect public sample issues. Use List view when the street map is difficult to navigate.
 2. **Start a report.** Press Report a concern, sign in to the demo citizen account when ready, choose a category and area, and write a clear title and description. Place an approximate pin or use the optional GPS permission if supported.
 3. **Look for a similar issue.** If a reviewed case already describes your experience, use **I experienced this too** instead of creating a duplicate. Choose the observation date and optionally attach helpful evidence.
 4. **Save a draft.** If unfinished, choose Save draft. Return to the same browser/device and choose Restore draft. Photo files are not stored with drafts.

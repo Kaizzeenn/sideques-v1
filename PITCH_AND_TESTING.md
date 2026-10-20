@@ -20,7 +20,7 @@
 
 ## Q&A topics to prepare
 
-- Why an illustrated map instead of an accurate navigation map? **Illustration is only for planning; production requires actual street geometry, coverage boundary checks and field verification.**
+- Why an street map instead of an accurate navigation map? **V13 uses actual street geometry, but a production pilot still requires validated coverage boundaries, report-location verification, and a shared backend.**
 - How are duplicate reports handled? **Potential match suggestions and one reviewed shared case, not automatic merging of distinct issues.**
 - Could XP cause spam? **One contribution per person per issue, staff verification, no XP for duplicates/rejected cases and a local demo daily XP cap.**
 - What if a referral is ignored? **Separate sent/accepted statuses, next review date, record delays, and no implied agency acceptance.**
@@ -44,7 +44,7 @@ Ask several real potential users to complete these tasks on the prototype withou
 | Report completion | Share of participants submitting a complete *test* report | ≥ 80% without assistance |
 | Median report time | Time from form open to reference ID | ≤ 3 minutes |
 | Duplicate avoidance | Share who choose existing concern when shown matching candidate | Observe; no claimed baseline |
-| Location accuracy | Compare selected pin to agreed landmark on a real map | Pilot needs geographic benchmark; illustrated map insufficient |
+| Location accuracy | Compare selected pin to agreed landmark on a real map | Pilot needs geographic benchmark; street map insufficient |
 | Status comprehension | Ask users to identify what is known and not known about agency acceptance | ≥ 80% correct in test |
 | Admin task completion | Time from opening review queue to recording the appropriate decision | ≤ 2 minutes for straightforward sample |
 | Accessibility | Tab/keyboard and contrast check on mobile/desktop | No keyboard traps; readable focus and errors |

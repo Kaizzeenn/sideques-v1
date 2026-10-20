@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#e9f6e5"><meta name="description" content="SIDEQUEST is a student-created, browser-local prototype for exploring community reporting. Not an official complaint service."><meta name="robots" content="noindex,nofollow"><title>SIDEQUEST | Taft Radar · Classroom Demo</title>
+<html lang="en"><head>
+<meta name="referrer" content="strict-origin-when-cross-origin"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#e9f6e5"><meta name="description" content="SIDEQUEST is a student-created, browser-local prototype for exploring community reporting. Not an official complaint service."><meta name="robots" content="noindex,nofollow"><title>SIDEQUEST | Taft Radar · Classroom Demo</title>
 
 
 
@@ -543,7 +544,9 @@ body.sq-admin-mode .app-shell{overflow:visible}
 :where(button,a,input,textarea,select,[tabindex]):focus-visible {outline:3px solid #18764b!important;outline-offset:3px!important}
 .access-note,.small,.tiny {line-height:1.55}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
-</style><link rel="stylesheet" href="enhancements.css"><link rel="stylesheet" href="v12.css"></head>
+</style><link rel="stylesheet" href="enhancements.css"><link rel="stylesheet" href="v12.css"><link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+<link rel="stylesheet" href="live-map.css">
+</head>
 <body><div class="demo-ribbon" role="note"><span>Classroom demo · not an official reporting service</span><span>Fictional sample cases. Reports stay in this browser and are not sent to any government agency.</span></div>
 <section class="welcome-overlay dismissed" id="welcomeOverlay" aria-label="Welcome to SIDEQUEST"><div class="welcome-frame">
   <div class="welcome-story"><div class="intro-top"><span class="intro-logo">✳ SIDE<span>QUEST</span></span></div><div class="intro-words"><h1>Report it.<br><em>See it through.</em></h1><p>Put a local concern on the map and follow what happens next.</p></div><div class="welcome-scene"><svg class="scene-svg" viewBox="0 0 620 425" role="img" aria-label="A cheerful imaginary Taft neighborhood with a path and community markers" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#d8e9ff"/><stop offset="1" stop-color="#f4ffdf"/></linearGradient><filter id="flt"><feDropShadow dx="0" dy="7" stdDeviation="5" flood-color="#537d76" flood-opacity=".18"/></filter></defs><rect width="620" height="425" rx="32" fill="url(#sky)"/><circle cx="510" cy="70" r="36" fill="#ffdf76"/><g fill="#fff" opacity=".84"><ellipse cx="113" cy="73" rx="63" ry="18"/><ellipse cx="139" cy="57" rx="30" ry="21"/><ellipse cx="349" cy="56" rx="67" ry="17"/><ellipse cx="357" cy="41" rx="31" ry="22"/></g><path d="M0 245Q105 203 194 241T403 219T620 223V425H0Z" fill="#a7e2a8"/><path d="M0 303Q120 276 229 296T455 282T620 296V425H0Z" fill="#70cba1"/><path d="M244 425C252 335 363 347 378 281C392 223 353 191 409 155" fill="none" stroke="#faedcf" stroke-width="75" stroke-linecap="round"/><path d="M244 425C252 335 363 347 378 281C392 223 353 191 409 155" fill="none" stroke="#d4bf9e" stroke-width="3" stroke-dasharray="5 10" stroke-linecap="round"/>
@@ -756,7 +759,7 @@ function homePage(){
     <div class="v7-map-heading"><div><span class="v7-overline">YOUR NEIGHBORHOOD</span><h2>Taft, at a glance</h2></div><button class="v7-map-link" data-go="explore">Full map ↗</button></div>
     ${mapHTML('homeMap')}
     ${mapLegend()}
-    <div class="v7-map-foot"><span>Illustrated neighborhood map · sample reports</span><a href="https://www.openstreetmap.org/#map=17/14.56341/120.99475" target="_blank" rel="noopener noreferrer">View real streets ↗</a></div>
+    <div class="v7-map-foot"><span>Street map · sample reports</span><a href="https://www.openstreetmap.org/#map=17/14.56341/120.99475" target="_blank" rel="noopener noreferrer">View real streets ↗</a></div>
    </div>
   </section>
   <div class="v7-numbers" aria-label="Community activity"><span><b>${fmt(st.open_count||0)}</b> in review or action</span><span><b>${fmt(st.resolved||0)}</b> marked resolved</span><span><b>${fmt(st.total||0)}</b> reports received</span></div>
@@ -1035,4 +1038,6 @@ const sqOldNotifyV10=notify;
 notify=function(message,bad=false){const host=document.getElementById('toasts');if(host){while(host.children.length>=2)host.firstElementChild.remove()}sqOldNotifyV10(message,bad)};
 // If reloaded on #admin with an existing coordinator session, restore workspace styling.
 setTimeout(()=>{if(state.page==='admin'&&state.user?.role==='admin'){document.body.classList.add('sq-admin-mode');render().catch(()=>{})}},210);
-</script><script src="enhancements.js"></script><script src="v12.js"></script></body></html>
+</script><script src="enhancements.js"></script><script src="v12.js"></script><script src="vendor/leaflet/leaflet.js"></script>
+<script src="live-map.js"></script>
+</body></html>
