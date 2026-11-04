@@ -624,7 +624,14 @@ html{scroll-padding-top:110px}
  <div class="nav-actions"><button class="personalize-trigger" data-customize title="Personalize your explorer"><span>Style</span></button><span class="demo-label"><span class="pulse-dot"></span> Pilot prototype</span><button id="loginTop" class="btn btn-white btn-small">Log in / Join <span>↗</span></button><button id="accountTop" class="account-chip hidden" data-go="activity"><span class="avatar">S</span><span id="accountName">Student</span> <span class="xp-chip" id="navXp">0 XP</span></button></div>
  </header>
  <main class="shell" id="main"></main>
- <footer class="footer shell"><div><strong><span class="brand-accent">✳</span> SIDEQUEST</strong><p>Spot it. Report it. Make it count.</p></div><div>Proposed Taft–Vito Cruz pilot · Not affiliated with an official government service<br>Non-emergency concerns only · Emergency? Call <a href="tel:911">911</a> · <button class="text-link" data-open="guide">Safety &amp; reporting guidelines</button></div></footer>
+ <footer class="footer shell"><div><strong><span class="brand-accent">✳</span> SIDEQUEST</strong><p>Spot it. Report it. Make it count.</p>
+    <nav aria-label="Footer navigation" style="display:flex; flex-wrap:wrap; gap:12px; margin-top:12px;">
+      <button type="button" class="text-link" data-go="home">Home</button>
+      <button type="button" class="text-link" data-go="report">Submit a report</button>
+      <button type="button" class="text-link" data-go="track">Track a report</button>
+      <button type="button" class="text-link" data-go="faq">FAQ</button>
+    </nav>
+</div><div>Proposed Taft–Vito Cruz pilot · Not affiliated with an official government service<br>Non-emergency concerns only · Emergency? Call <a href="tel:911">911</a> · <button class="text-link" data-open="guide">Safety &amp; reporting guidelines</button><p>Classroom prototype. Reports and status updates are demonstration data stored in this browser.</p></div></footer>
  <nav class="mobile-nav" aria-label="Mobile navigation"><button data-go="home"><span>⌂</span>Home</button><button data-go="explore"><span>◇</span>Radar</button><button data-go="report" class="mobile-add"><span>＋</span>Report</button><button data-go="track"><span>◷</span>Track</button><button data-go="activity"><span>☺</span>Profile</button></nav>
 </div>
 <div id="overlay" class="overlay hidden" role="presentation"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><button class="modal-close" data-close aria-label="Close dialog">×</button><div id="modalContent"></div></div></div>
