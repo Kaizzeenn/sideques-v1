@@ -101,3 +101,16 @@ Friendly mint/cream/lavender styling, purposeful map interactions, readable spac
 Maps are restricted to the existing proposed Taft-Vito Cruz pilot rectangle: southwest 14.552, 120.985; northeast 14.574, 121.003. It includes the existing Vito Cruz, Benilde-DLSU, Ocampo, Arellano, and Rizal Memorial sample landmarks. This is a project coverage choice, not an official administrative boundary.
 
 Hard pan limits, viewport-dependent minimum zoom, no world wrapping, bounded tile loading, and a dashed coverage outline apply to Home, Explore, and report maps. Resizing recalculates the zoom limit. Location clicks and dragged pins outside coverage are rejected by the existing coordinate validation. If an official pilot boundary is agreed later, update coverage consistently in the map, form/GPS validation, and demo API.
+
+
+
+
+
+## Team
+
+| Member | Responsibility |
+| --- | --- |
+| Marj | Home page and public map walkthrough |
+| Chesca | Report form and submission flow |
+| Matthew | Case tracking and status history |
+| Sodie | Coordinator review workspace |
