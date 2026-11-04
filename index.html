@@ -1172,7 +1172,32 @@ document.addEventListener('input',function(event){
  if(empty)empty.classList.toggle('hidden',visible!==0);
 });
 </script>
+<!-- Larger text toggle (A+) -->
+<style>
+html.sq-large-text body{zoom:1.15}
+</style>
+<script>
+(function(){
+ function apply(on){
+  document.documentElement.classList.toggle('sq-large-text',on);
+  const b=document.getElementById('sqTextSize');
+  if(b){b.textContent=on?'A−':'A+';b.setAttribute('aria-pressed',on);b.title=on?'Use normal text size':'Make text larger';}
+ }
+ function addButton(){
+  const lang=document.getElementById('v11LangToggle');
+  if(!lang){return setTimeout(addButton,300);}
+  if(document.getElementById('sqTextSize'))return;
+  const b=document.createElement('button');
+  b.id='sqTextSize';b.type='button';b.className=lang.className;
+  lang.parentNode.insertBefore(b,lang.nextSibling);
+  let on=false;try{on=localStorage.getItem('sq-large-text')==='1'}catch(_){}
+  apply(on);
+  b.addEventListener('click',function(){
+   on=!on;apply(on);
+   try{localStorage.setItem('sq-large-text',on?'1':'0')}catch(_){}
+  });
+ }
+ addButton();
+})();
+</script>
 </body></html>
-
-
-HERE IS THE UPDATED CODE, ADD IT HERE
