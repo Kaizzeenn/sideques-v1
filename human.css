@@ -1,0 +1,81 @@
+/* ==========================================================================
+   human.css: the "Taft street sign" look. Loaded LAST so it wins over the
+   older v3 to v13 style layers in index.html, enhancements.css and v12.css.
+   Idea: Philippine road signs (green plates, white border, highway-sign
+   lettering), concrete-grey ground, and yellow curb paint used sparingly.
+   ========================================================================== */
+:root{
+  --road:#0c5a37;        /* street-sign green */
+  --road-dark:#08402a;
+  --asphalt:#1e2522;     /* main text */
+  --muted:#56625c;
+  --concrete:#e9ebe6;    /* page background */
+  --slab:#f7f8f5;        /* panels */
+  --seam:#cfd4cc;        /* borders, like the lines between sidewalk slabs */
+  --curb:#f2c12e;        /* yellow curb paint: focus rings and one hero mark only */
+  --sign-font:"Overpass","Arial Narrow",system-ui,sans-serif;
+  --read-font:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+}
+
+/* ---------- ground ---------- */
+html body{background:var(--concrete)!important;color:var(--asphalt);font-family:var(--read-font)!important}
+body .ambient,body:before,body:after{display:none!important}
+body h1,body h2,body h3{font-family:var(--sign-font)!important;letter-spacing:-.01em;color:var(--asphalt)}
+body :focus-visible{outline:3px solid var(--curb)!important;outline-offset:2px}
+
+/* ---------- buttons: primary looks like a sign plate ---------- */
+body .btn{border-radius:7px!important;font-family:var(--sign-font)!important;font-weight:700;letter-spacing:.01em;box-shadow:none!important}
+body .btn:not(.btn-white):not(.btn-soft):not(.btn-dark){background:var(--road)!important;color:#fff!important;border:2px solid var(--road)!important;outline:1.5px solid rgba(255,255,255,.85);outline-offset:-5px}
+body .btn:not(.btn-white):not(.btn-soft):not(.btn-dark):hover{background:var(--road-dark)!important;border-color:var(--road-dark)!important}
+body .btn-white{background:var(--slab)!important;color:var(--asphalt)!important;border:1.5px solid var(--asphalt)!important}
+
+/* ---------- top bar ---------- */
+body .topbar{background:var(--slab)!important;border:1.5px solid var(--seam)!important;box-shadow:none!important;border-radius:10px!important}
+html body .topbar .brand .brand-mark,html body .brand-mark{background:var(--road)!important;color:#fff!important;border-radius:6px!important}
+body .brand,body .brand span{font-family:var(--sign-font)!important}
+body .brand-accent{color:var(--road)!important}
+body .brand small{letter-spacing:.04em!important;text-transform:none!important;font-weight:700}
+body .navlinks .nav-active,body .navlinks button[aria-current="page"]{background:var(--road)!important;color:#fff!important}
+
+/* ---------- panels: flat slabs with a seam, no soft floating shadows ---------- */
+body .v7-map-panel,body .v7-numbers,body .sq-rewards-strip,body .v11-sheet,body .v12-surface,body .card,body .v7-quest-actions{
+  background:var(--slab)!important;border:1.5px solid var(--seam)!important;box-shadow:none!important;border-radius:10px!important}
+
+/* ---------- hero: the one loud thing on the page ---------- */
+body .v7-intro::before,body .v7-intro::after{display:none!important}
+body .v7-intro{background:transparent!important;border:0!important;box-shadow:none!important;padding-left:0!important;padding-right:0!important}
+body .v7-intro h1{font-family:var(--sign-font)!important;font-weight:800!important;font-size:clamp(46px,6.4vw,84px)!important;line-height:.95!important;letter-spacing:-.03em!important;color:var(--asphalt)!important;margin:22px 0 14px!important}
+body .v7-intro > p{font-size:19px!important;max-width:30ch;color:var(--muted)!important}
+.v7-location{display:flex!important;flex-direction:column;align-items:flex-start;gap:6px;letter-spacing:0!important;text-transform:none!important}
+.v7-location .sign{display:inline-block;background:var(--road);color:#fff;font-family:var(--sign-font);font-weight:700;font-size:clamp(22px,2.6vw,30px);line-height:1;padding:10px 18px 8px;border-radius:6px;
+  outline:2px solid #fff;outline-offset:-6px;box-shadow:0 1px 0 var(--road-dark)}
+.v7-location .sign-cross{font-size:clamp(16px,1.8vw,20px);margin-left:28px;padding:8px 14px 6px}
+body .v7-hero-note{color:var(--muted)!important}
+body .v7-note-dot{background:var(--curb)!important;box-shadow:0 0 0 2px var(--asphalt)!important}
+
+/* ---------- small text and lists ---------- */
+body .v7-numbers b{font-family:var(--sign-font);color:var(--road)}
+body .v7-cat{border-radius:8px!important;background:var(--slab)!important;border:1.5px solid var(--seam)!important;box-shadow:none!important}
+body .v7-cat:hover{border-color:var(--road)!important}
+body .v7-issue-line{border-radius:0!important;background:transparent!important;border:0!important;border-bottom:1.5px solid var(--seam)!important;box-shadow:none!important}
+body .v7-map-link,body .v7-text-action{color:var(--road)!important;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1.5px}
+.sample-note{text-transform:none!important;letter-spacing:0!important;font-size:13px!important;font-weight:700!important;color:var(--muted)!important}
+body .sq-meter i{background:var(--road)!important}
+
+/* inner boxes: drop the pastel tints (status tags keep their colors, those carry meaning) */
+body .v11-flow-step,body .v12-milestone,body .v11-plant{background:#fff!important;border:1.5px solid var(--seam)!important;box-shadow:none!important;border-radius:8px!important}
+body .v11-flow-step b,body .v11-flow-step strong:first-child{font-family:var(--sign-font)}
+body .v11-highlight{background:#fff!important;border:0!important;border-left:4px solid var(--asphalt)!important;border-radius:0 8px 8px 0!important;box-shadow:none!important}
+body .v7-issue-code,body .v7-cat-mark{background:#fff!important;border:1.5px solid var(--seam)!important;border-radius:6px!important}
+
+/* ---------- footer and phone nav ---------- */
+body .footer{border-top:1.5px solid var(--seam)!important;background:transparent!important}
+body .mobile-nav{background:var(--slab)!important;border-top:1.5px solid var(--seam)!important;backdrop-filter:none!important}
+body .mobile-nav .mobile-add span{background:var(--road)!important;color:#fff!important;border-radius:7px!important}
+body .offline-demo-banner{background:var(--asphalt)!important;color:#fff!important;border:0!important}
+body .offline-demo-banner b,body .offline-demo-banner *{color:inherit!important}
+
+@media (max-width:650px){
+  .v7-location .sign-cross{margin-left:20px}
+  body .v7-intro h1{margin-top:18px!important}
+}
