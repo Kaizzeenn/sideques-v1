@@ -621,7 +621,7 @@ html{scroll-padding-top:110px}
  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
  <header class="topbar shell"><button class="brand" data-go="home" aria-label="SIDEQUEST home"><span class="brand-mark">✳</span><span>SIDE<span class="brand-accent">QUEST</span><small>TAFT RADAR</small></span></button>
  <button type="button" class="nav-toggle" aria-controls="primaryNavigation" aria-expanded="false" aria-label="Open navigation menu"><span aria-hidden="true">☰</span></button>
-<nav id="primaryNavigation" class="navlinks" aria-label="Primary navigation"><button data-go="home" data-nav="home" class="nav-active">Home</button><button data-go="explore" data-nav="explore">Area map</button><button data-go="report" data-nav="report">Report</button><button data-go="track" data-nav="track">Track</button><button data-go="activity" data-nav="activity">My Activity</button><button data-go="faq" data-nav="faq">FAQ</button><button data-go="admin" data-nav="admin" class="admin-only hidden">Coordinator</button></nav>
+<nav id="primaryNavigation" class="navlinks" aria-label="Primary navigation"><button data-go="home" data-nav="home" class="nav-active">Home</button><button data-go="explore" data-nav="explore">Area map</button><button data-go="report" data-nav="report">Report</button><button data-go="track" data-nav="track">Track</button><button data-go="activity" data-nav="activity">My Activity</button><button data-go="faq" data-nav="faq">FAQ</button><button data-go="info" data-nav="info">About</button><button data-go="admin" data-nav="admin" class="admin-only hidden">Coordinator</button></nav>
  <div class="nav-actions"><button class="personalize-trigger" data-customize title="Personalize your explorer"><span>Style</span></button><span class="demo-label"><span class="pulse-dot"></span> Pilot prototype</span><button id="loginTop" class="btn btn-white btn-small">Log in / Join</button><button id="accountTop" class="account-chip hidden" data-go="activity"><span class="avatar">S</span><span id="accountName">Student</span> <span class="xp-chip" id="navXp">0 XP</span></button></div>
  </header>
  <main class="shell" id="main"></main>
@@ -631,6 +631,11 @@ html{scroll-padding-top:110px}
       <button type="button" class="text-link" data-go="report">Submit a report</button>
       <button type="button" class="text-link" data-go="track">Track a report</button>
       <button type="button" class="text-link" data-go="faq">FAQ</button>
+      <button type="button" class="text-link" data-info-open="about">About</button>
+      <button type="button" class="text-link" data-info-open="how">How it works</button>
+      <button type="button" class="text-link" data-info-open="contact">Contact</button>
+      <button type="button" class="text-link" data-info-open="privacy">Privacy policy</button>
+      <button type="button" class="text-link" data-info-open="terms">Reporting rules</button>
     </nav>
 </div><div>Proposed Taft–Vito Cruz pilot · Not affiliated with an official government service<br>Non-emergency concerns only · Emergency? Call <a href="tel:911">911</a> · <button class="text-link" data-open="guide">Safety &amp; reporting guidelines</button><p>Classroom prototype. Reports and status updates are demonstration data stored in this browser.</p></div></footer>
  <nav class="mobile-nav" aria-label="Mobile navigation"><button data-go="home"><span>⌂</span>Home</button><button data-go="explore"><span>◇</span>Radar</button><button data-go="report" class="mobile-add"><span>＋</span>Report</button><button data-go="track"><span>◷</span>Track</button><button data-go="activity"><span>☺</span>Profile</button></nav>
@@ -666,7 +671,7 @@ function publicUser(u){return u?{id:u.id,alias:u.alias,role:u.role,xp:u.xp,csrf:
 function fail(msg){throw new Error(msg)}
 function requireUser(){let u=current();if(!u)fail('Sign in with a demo profile to continue.');return u}
 function requireAdmin(){let u=requireUser();if(u.role!=='admin')fail('Coordinator demo profile required.');return u}
-function exposeReport(r){let {owner_id,privateNotes,...rest}=r;return typeof structuredClone==='function'?structuredClone(rest):JSON.parse(JSON.stringify(rest))}
+function exposeReport(r){let {owner_id,privateNotes,private_contact,...rest}=r;return typeof structuredClone==='function'?structuredClone(rest):JSON.parse(JSON.stringify(rest))}
 function reward(u,sourceType,sourceId,pts){let d=loadDB();if(d.rewards.some(r=>r.user_id===u.id&&r.source_type===sourceType&&r.source_id===sourceId))return;d.rewards.push({user_id:u.id,source_type:sourceType,source_id:sourceId,points:pts,created:stamp()});u.xp+=pts}
 function addHistory(r,status,note,actor){r.status=status;r.updated=stamp();r.history.push({status,note,actor,created:stamp()})}
 function viewable(r,u){return PUBLIC_STAT.includes(r.status)||Boolean(u&&(u.role==='admin'||r.owner_id===u.id))}
@@ -680,7 +685,7 @@ async function demoAPI(url,{method='GET',json,body}={}){
  if(path==='/api/auth/logout'){setCurrent(null);return {ok:true}}
  if(path==='/api/reports'&&method==='GET'){let x=d.reports.filter(r=>PUBLIC_STAT.includes(r.status));if(qp.get('zone'))x=x.filter(r=>r.zone===qp.get('zone'));if(qp.get('category'))x=x.filter(r=>r.category===qp.get('category'));if(qp.get('search')){let q=qp.get('search').toLowerCase();x=x.filter(r=>(r.title+' '+r.description+' '+r.landmark).toLowerCase().includes(q))}return {reports:x.slice().reverse().map(exposeReport)}}
  if(path==='/api/duplicates')return {matches:duplicates(qp.get('zone'),qp.get('category'),qp.get('title'))};
- if(path==='/api/reports'&&method==='POST'){let owner=requireUser(),get=k=>String(body.get(k)||'').trim();let title=get('title'),description=get('description'),category=get('category'),zone=get('zone'),landmark=get('landmark'),observed=get('observed');if(!DEMO_CATS.includes(category)||!DEMO_ZONES.includes(zone)||title.length<8||title.length>110||description.length<25||description.length>1200||landmark.length<5||landmark.length>120||!validDemoDate(observed))fail('Complete all required fields and choose a valid date that is not in the future.');let photo=body.get('photo');if(photo?.size>5*1024*1024)fail('Photo must be no larger than 5 MB.');if(photo?.size&& !['image/jpeg','image/png','image/webp'].includes(photo.type))fail('Use a JPG, PNG, or WebP photo.');let id=d.nextReport++,ref='SQ-DEMO-'+String(id).padStart(4,'0'),r={id,ref,title,category,zone,landmark,description,observed,status:'submitted',office:'Pilot Area Coordinator',created:stamp(),updated:stamp(),lat:(Number.isFinite(Number(body.get('lat')))&&Number(body.get('lat'))>=14.552&&Number(body.get('lat'))<=14.574&&Number.isFinite(Number(body.get('lng')))&&Number(body.get('lng'))>=120.985&&Number(body.get('lng'))<=121.003)?Number(body.get('lat')):null,lng:(Number.isFinite(Number(body.get('lat')))&&Number(body.get('lat'))>=14.552&&Number(body.get('lat'))<=14.574&&Number.isFinite(Number(body.get('lng')))&&Number(body.get('lng'))>=120.985&&Number(body.get('lng'))<=121.003)?Number(body.get('lng')):null,duplicate_of:null,owner_id:owner.id,confirmations:0,pending_confirmations:0,has_evidence:Boolean(body.get('evidence_preview')),history:[{status:'submitted',note:'Report saved in this browser for demo coordinator review.',actor:'SIDEQUEST demo',created:stamp()}]};d.reports.push(r); if(r.has_evidence){d.evidence ||= {};d.evidence[id]=String(body.get('evidence_preview')||'').slice(0,400000)}if(!saveDB()){d.reports.pop();delete (d.evidence||{})[id];d.nextReport--;fail('Browser storage is full. Please try without a photo or clear old demo data.')}return {ok:true,ref,report_id:id}}
+ if(path==='/api/reports'&&method==='POST'){let owner=requireUser(),get=k=>String(body.get(k)||'').trim();let title=get('title'),description=get('description'),category=get('category'),zone=get('zone'),landmark=get('landmark'),observed=get('observed');if(!DEMO_CATS.includes(category)||!DEMO_ZONES.includes(zone)||title.length<8||title.length>110||description.length<25||description.length>1200||landmark.length<5||landmark.length>120||!validDemoDate(observed))fail('Complete all required fields and choose a valid date that is not in the future.');let photo=body.get('photo');if(photo?.size>5*1024*1024)fail('Photo must be no larger than 5 MB.');if(photo?.size&& !['image/jpeg','image/png','image/webp'].includes(photo.type))fail('Use a JPG, PNG, or WebP photo.');let id=d.nextReport++,ref='SQ-DEMO-'+String(id).padStart(4,'0'),r={id,ref,title,category,zone,landmark,description,observed,status:'submitted',office:'Pilot Area Coordinator',created:stamp(),updated:stamp(),lat:(Number.isFinite(Number(body.get('lat')))&&Number(body.get('lat'))>=14.552&&Number(body.get('lat'))<=14.574&&Number.isFinite(Number(body.get('lng')))&&Number(body.get('lng'))>=120.985&&Number(body.get('lng'))<=121.003)?Number(body.get('lat')):null,lng:(Number.isFinite(Number(body.get('lat')))&&Number(body.get('lat'))>=14.552&&Number(body.get('lat'))<=14.574&&Number.isFinite(Number(body.get('lng')))&&Number(body.get('lng'))>=120.985&&Number(body.get('lng'))<=121.003)?Number(body.get('lng')):null,duplicate_of:null,owner_id:owner.id,confirmations:0,pending_confirmations:0,has_evidence:Boolean(body.get('evidence_preview')),private_contact:String(body.get('contact_email')||'').trim().slice(0,120),history:[{status:'submitted',note:'Report saved in this browser for demo coordinator review.',actor:'SIDEQUEST demo',created:stamp()}]};d.reports.push(r); if(r.has_evidence){d.evidence ||= {};d.evidence[id]=String(body.get('evidence_preview')||'').slice(0,400000)}if(!saveDB()){d.reports.pop();delete (d.evidence||{})[id];d.nextReport--;fail('Browser storage is full. Please try without a photo or clear old demo data.')}return {ok:true,ref,report_id:id}}
  if(path.startsWith('/api/track/')){let ref=decodeURIComponent(path.split('/').pop()).toUpperCase(),r=d.reports.find(x=>x.ref===ref);if(!r)fail('Tracking reference not found in this browser.');if(!viewable(r,u))fail('Only the reporter or coordinator can view this unreviewed case.');return {report:exposeReport(r),can_view_evidence:!!u&&(u.role==='admin'||r.owner_id===u.id)}}
  if(/^\/api\/reports\/\d+$/.test(path)&&method==='GET'){let r=d.reports.find(x=>x.id===Number(path.split('/').pop()));if(!r||!viewable(r,u))fail('This report is only available to its reporter or coordinator until review.');return {report:exposeReport(r),can_view_evidence:!!u&&(u.role==='admin'||r.owner_id===u.id)}}
  let m=path.match(/^\/api\/reports\/(\d+)\/(confirm|more-info|recheck)$/);if(m){let id=Number(m[1]),r=d.reports.find(x=>x.id===id),me=requireUser();if(!r)fail('Unknown report.');if(m[2]==='confirm'){if(!PUBLIC_STAT.includes(r.status))fail('Report is not available for confirmation.');if(r.owner_id===me.id)fail('You cannot confirm your own report.');if(d.confirmations.some(c=>c.report_id===id&&c.user_id===me.id))fail('You have already confirmed this concern.');if(!validDemoDate(json?.observed))fail('Choose a valid observation date, not in the future.');d.confirmations.push({id:d.nextConfirm++,report_id:id,user_id:me.id,title:r.title,ref:r.ref,alias:me.alias,observed:json.observed,still_present:json.still_present,note:String(json.note||'').slice(0,300),status:'pending',created:stamp()});r.pending_confirmations++;saveDB();return {ok:true}}
@@ -873,7 +878,7 @@ function faqPage(){return `<div class="page sq-faq-page">
  <div class="sq-faq-end"><h2>Ready to help your community?</h2><p>Explore public concerns or create a new report. Remember that this is a classroom prototype, not an official reporting service.</p><div class="row wrap"><button class="btn" data-go="report">Report a concern</button><button class="btn btn-white" data-go="explore">Explore the map</button></div></div>
  </div>`}
 
-async function render(){if(state.page==='explore'||state.page==='home'){await loadReports();await loadMyMapIssues();}if(state.page==='activity'&&state.user)state.mine=await api('/api/my');if(state.page==='admin')state.admin=await api('/api/admin/queue');$('#main').innerHTML=({home:homePage,explore:explorePage,report:reportPage,track:trackPage,activity:activityPage,faq:faqPage,admin:adminPage})[state.page]();initMaps();updateNav();if(state.page==='report')checkMatches()}
+async function render(){if(state.page==='explore'||state.page==='home'){await loadReports();await loadMyMapIssues();}if(state.page==='activity'&&state.user)state.mine=await api('/api/my');if(state.page==='admin')state.admin=await api('/api/admin/queue');$('#main').innerHTML=({home:homePage,explore:explorePage,report:reportPage,track:trackPage,activity:activityPage,faq:faqPage,info:()=>window.infoPage(),admin:adminPage})[state.page]();initMaps();updateNav();if(state.page==='report')checkMatches()}
 function authModal(tab='login'){state.authTab=tab;openModal(`<div class="auth-header"><div class="auth-mascot"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyOTAgMjkwIiBmaWxsPSJub25lIj4KIDxlbGxpcHNlIGN4PSIxNDQiIGN5PSIyNzMiIHJ4PSI5MiIgcnk9IjExIiBmaWxsPSIjMjU1QzQ5IiBvcGFjaXR5PSIuMTIiLz4KIDxwYXRoIGQ9Ik0xMDQgMTEwYy02LTI1LTI1LTQyLTMzLTU3LTQtOC0zLTE1IDYtMTkgMTAtNSAyMyAxIDMzIDE1IDEwIDEzIDE2IDMyIDE5IDUxIiBmaWxsPSIjNEJDRjc5IiBzdHJva2U9IiMyMjRDNDAiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiA8cGF0aCBkPSJNMTMyIDEwM0MxMTUgNzggMTA2IDUxIDExOCAyNmM5LTIwIDI0LTIyIDM2LTQgMTMgMjEgMTQgNDYgNSA3OCIgZmlsbD0iIzg0REI2MiIgc3Ryb2tlPSIjMjI0QzQwIiBzdHJva2Utd2lkdGg9IjUiLz4KIDxwYXRoIGQ9Ik0xNjggMTA5YzE1LTIyIDI3LTM5IDQzLTQ5IDEyLTcgMjMtNSAyNSA3IDMgMTgtMTkgNDYtNTEgNTYiIGZpbGw9IiM1QkQzNkYiIHN0cm9rZT0iIzIyNEM0MCIgc3Ryb2tlLXdpZHRoPSI1Ii8+CiA8cGF0aCBkPSJNOTggMTA5Yy0yNC04LTQzLTE4LTU3LTM2LTEyLTE2LTctMjggOS0yNyAyMSAxIDQzIDIyIDU5IDQ2IiBmaWxsPSIjOERERTc2IiBzdHJva2U9IiMyMjRDNDAiIHN0cm9rZS13aWR0aD0iNSIvPgogPHBhdGggZD0iTTEwMCAxMjEgODYgMTUyIDkyIDIzOVE5OCAyNTkgMTQyIDI2M1ExOTQgMjYzIDIwMCAyNDFMMjEwIDE0MyAxOTEgMTE0WiIgZmlsbD0iI0MxOEE1RCIgc3Ryb2tlPSIjNUE0NDMzIiBzdHJva2Utd2lkdGg9IjYiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KIDxwYXRoIGQ9Ik0xMDUgMTI0UTE0NSAxNDQgMTk5IDEyNCIgc3Ryb2tlPSIjODQ1NjNFIiBzdHJva2Utd2lkdGg9IjciIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogPHBhdGggZD0iTTExMyAxNDNjLTEyIDI4LTEwIDc1LTMgMTAxbTY1LTk5YzggMzUgMyA2Ny0xIDkzIiBzdHJva2U9IiNFQUMxOTgiIHN0cm9rZS13aWR0aD0iNiIgb3BhY2l0eT0iLjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogPHBhdGggZD0iTTEwMCAxOTFjLTE5LTEyLTM4LTctNDIgNC02IDE3IDEzIDI3IDQwIDIxbTEwMy0yNWMyMC0xMSAzNS01IDM5IDYgNiAxNy0xMSAyNy0zNyAyMSIgZmlsbD0iI0Q2OUI2RSIgc3Ryb2tlPSIjNUE0NDMzIiBzdHJva2Utd2lkdGg9IjUiLz4KIDxlbGxpcHNlIGN4PSIxMjYiIGN5PSIxODgiIHJ4PSI2IiByeT0iOCIgZmlsbD0iIzNEMzEyOSIvPgogPGVsbGlwc2UgY3g9IjE3MSIgY3k9IjE4OCIgcng9IjYiIHJ5PSI4IiBmaWxsPSIjM0QzMTI5Ii8+CiA8ZWxsaXBzZSBjeD0iMTEyIiBjeT0iMjAxIiByeD0iMTAiIHJ5PSI2IiBmaWxsPSIjRTk5NDgyIiBvcGFjaXR5PSIuOCIvPgogPGVsbGlwc2UgY3g9IjE4NSIgY3k9IjIwMSIgcng9IjEwIiByeT0iNiIgZmlsbD0iI0U5OTQ4MiIgb3BhY2l0eT0iLjgiLz4KIDxwYXRoIGQ9Ik0xMzkgMjA2cTkgMTMgMTkgMCIgc3Ryb2tlPSIjM0QzMTI5IiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogPHBhdGggZD0iTTEwNyAyNTNxLTEwIDE0LTIyIDhtOTYtOHExMyAxNCAyMyA2IiBzdHJva2U9IiM1QTQ0MzMiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiA8cGF0aCBkPSJNMTQ1IDI2Yy05IDE4LTEyIDM2LTEyIDU3IiBzdHJva2U9IiM0MjlBNEYiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiA8Y2lyY2xlIGN4PSIyMzUiIGN5PSIxMTkiIHI9IjE3IiBmaWxsPSIjRjhEQzY3IiBzdHJva2U9IiMyNzQ2M0IiIHN0cm9rZS13aWR0aD0iNCIvPgogPHBhdGggZD0iTTIzNCAxMTF2MTdtLTgtOWgxNiIgc3Ryb2tlPSIjMjc0NjNCIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K" alt="SIDEQUEST mascot"></div><div><div class="eyebrow">Welcome to the neighborhood</div><h2 id="modalTitle">${tab==='login'?'Welcome back!':'Join SIDEQUEST'}</h2><p class="muted small">${tab==='login'?'Continue making a difference.':'Your next good deed starts here.'}</p></div></div><div class="auth-switch"><button class="${tab==='login'?'active':''}" data-auth="login">Log in</button><button class="${tab==='register'?'active':''}" data-auth="register">Create account</button></div><form id="authForm"><div class="form-group ${tab==='login'?'hidden':''}"><label for="authName">Display name</label><input class="field" name="alias" id="authName" placeholder="What should we call you?" minlength="2" maxlength="42" ${tab==='register'?'required':''}></div><div class="form-group"><label for="authEmail">Email</label><input class="field" name="email" id="authEmail" type="email" autocomplete="email" placeholder="your@email.com" required></div><div class="form-group"><label for="authPassword">Password</label><input class="field" name="password" id="authPassword" type="password" autocomplete="${tab==='login'?'current-password':'new-password'}" placeholder="${tab==='login'?'Your password':'At least 10 characters'}" minlength="${tab==='login'?1:10}" required></div>${tab==='register'?'<p class="hint">Local demo only: registration creates a browser-only citizen profile, not a secure account. Use a fictional email and disposable demo password.</p>':'<p class="muted small">This is a local classroom demo. Try coordinator@example.test / DemoOnly123! to review reports. Never use a personal password here.</p>'}<button class="btn" style="width:100%;margin-top:18px" type="submit">${tab==='login'?'Log in':'Create account'}</button></form>`)}
 async function handleAuth(e){e.preventDefault();let f=new FormData(e.target);const info={email:String(f.get('email')||''),password:String(f.get('password')||'')};if(state.authTab==='register')info.alias=String(f.get('alias')||'');let btn=e.target.querySelector('button[type=submit]');btn.disabled=true;try{let v=await api(state.authTab==='login'?'/api/auth/login':'/api/auth/register',{method:'POST',json:info});state.user=v.user;closeModal();notify(state.authTab==='register'?'Welcome! Your account is ready. ✓':'Welcome back! 🌱');await refreshBoot();await render()}catch(err){notify(err.message,true)}finally{btn.disabled=false}}
 async function logout(){try{await api('/api/auth/logout',{method:'POST'});state.user=null;state.currentReport=null;await refreshBoot();notify('Signed out of this local demo.');await go('home')}catch(e){notify(e.message,true)}}
@@ -924,7 +929,7 @@ document.addEventListener('submit',async e=>{if(e.target.matches('#authForm'))re
 let searchTimer;document.addEventListener('input',e=>{if(state.page==='report'&&['title','zone','category'].includes(e.target.name)){if(e.target.name==='title')state.form.title=e.target.value;clearTimeout(searchTimer);searchTimer=setTimeout(checkMatches,350)}if(e.target.id==='adminSearch'){let pos=e.target.selectionStart;state.adminSearch=e.target.value;$('#adminContent').innerHTML=adminContent();let field=$('#adminSearch');if(field){field.focus();field.setSelectionRange(pos,pos)}}if(e.target.id==='searchIssues'){state.filters.search=e.target.value;clearTimeout(searchTimer);searchTimer=setTimeout(()=>render(),500)}});
 document.addEventListener('change',async e=>{if(state.page==='report'){if(e.target.name==='category'||e.target.name==='zone'){state.form[e.target.name]=e.target.value;checkMatches()}if(e.target.id==='photo'){let f=e.target.files?.[0];$('#photoName').textContent=f?`${f.name} · ${(f.size/1024).toFixed(0)} KB selected`:''}}if(e.target.id==='zoneFilter'||e.target.id==='catFilter'){state.filters[e.target.id==='zoneFilter'?'zone':'category']=e.target.value;await render()}if(['adminZone','adminStatus','adminCategory'].includes(e.target.id)){state[e.target.id]=e.target.value;$('#adminContent').innerHTML=adminContent()}});
 $('#overlay').addEventListener('click',e=>{if(e.target===$('#overlay'))closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
-(async()=>{try{await refreshBoot();let hash=location.hash.replace('#','');if(['home','explore','report','track','activity','faq','admin'].includes(hash))state.page=hash;if(state.page==='admin'&&state.user?.role!=='admin')state.page='home';await render()}catch(e){$('#main').innerHTML=`<div class="empty" style="margin-top:60px"><h2>Could not connect to SIDEQUEST</h2><p>${safe(e.message)}</p><p>This standalone demo runs without a server. Try refreshing the file.</p></div>`;notify(e.message,true)}})();
+(async()=>{try{await refreshBoot();let hash=location.hash.replace('#','');if(['home','explore','report','track','activity','faq','info','admin'].includes(hash))state.page=hash;if(state.page==='admin'&&state.user?.role!=='admin')state.page='home';await render()}catch(e){$('#main').innerHTML=`<div class="empty" style="margin-top:60px"><h2>Could not connect to SIDEQUEST</h2><p>${safe(e.message)}</p><p>This standalone demo runs without a server. Try refreshing the file.</p></div>`;notify(e.message,true)}})();
 
 </script><script id="sidequest-v3-script">
 /* SIDEQUEST V4 app shell enhancements — demo authentication remains browser-local */
@@ -1202,4 +1207,219 @@ html.sq-large-text body{zoom:1.15}
 })();
 </script>
 <link rel="stylesheet" href="human.css">
+<style id="sidequest-final-extras-style">
+/* SIDEQUEST final extras: info pages, inline validation, contact form */
+.sq-field-error{display:flex;gap:6px;align-items:flex-start;color:#b3261e;font-size:12px;font-weight:800;line-height:1.45}
+.sq-field-error::before{content:"⚠";font-size:12px}
+.sq-invalid .field,.sq-invalid .select,.sq-invalid .textarea,.field.sq-invalid,.select.sq-invalid,.textarea.sq-invalid{border-color:#d0524f !important;box-shadow:0 0 0 3px #fbe1df !important}
+.category-choice.sq-invalid{outline:2px solid #d0524f;outline-offset:6px;border-radius:14px}
+.sq-error-summary{background:#fff2f1;border:1.5px solid #e8a7a4;border-radius:16px;padding:16px 18px;margin-bottom:18px;color:#7c1f1b}
+.sq-error-summary h2{font-size:16px;margin:0 0 8px;color:#7c1f1b}
+.sq-error-summary ul{margin:0;padding-left:20px;font-size:13px;line-height:1.7}
+.sq-error-summary a{color:#7c1f1b;text-decoration:underline}
+.sq-error-summary:focus{outline:3px solid #f2b8b5;outline-offset:3px}
+.sq-counter{align-self:flex-end;font-size:11px;font-weight:700;color:#87948c;margin-top:-2px}
+.sq-counter.sq-over{color:#b3261e}
+.sq-optional{font-weight:600;color:#87948c;font-size:11px}
+.sq-track-error{margin-top:23px;background:#fff2f1;border:1.5px solid #e8a7a4;border-radius:18px;padding:22px;color:#7c1f1b;line-height:1.6}
+.sq-track-error strong{display:block;font-size:16px;margin-bottom:4px}
+.sq-info-page .sq-info-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 22px}
+.sq-info-tabs button{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:10px 16px;font:800 13px Nunito,sans-serif;color:var(--ink);cursor:pointer;min-height:44px}
+.sq-info-tabs button[aria-selected="true"]{background:var(--green-dark);border-color:var(--green-dark);color:#fff}
+.sq-info-tabs button:focus-visible{outline:3px solid #9fdcb9;outline-offset:2px}
+.sq-info-panel{display:grid;gap:16px}
+.sq-info-panel h2{font-size:clamp(22px,3vw,28px);margin-bottom:4px}
+.sq-info-panel h3{font-size:16px;margin-bottom:6px}
+.sq-info-panel p,.sq-info-panel li{color:#4f6158;font-size:14px;line-height:1.75}
+.sq-info-panel ul,.sq-info-panel ol{padding-left:20px;margin:0}
+.sq-info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.sq-steps{counter-reset:sqstep;list-style:none;padding:0 !important;display:grid;gap:12px}
+.sq-steps li{counter-increment:sqstep;display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:start;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px}
+.sq-steps li::before{content:counter(sqstep);width:34px;height:34px;border-radius:11px;background:#e1f7e6;color:#1f7a4b;display:grid;place-items:center;font:900 15px Nunito,sans-serif}
+.sq-status-table{width:100%;border-collapse:collapse;font-size:13px}
+.sq-status-table th,.sq-status-table td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.sq-contact-form{display:grid;gap:14px}
+.sq-contact-form .form-group{gap:6px}
+.sq-hotlines{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.sq-hotlines li{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed var(--line);padding-bottom:8px}
+.sq-hotlines a{font-weight:900;color:#1f7a4b}
+@media(max-width:640px){.sq-info-tabs{overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}.sq-info-tabs button{flex:0 0 auto}.sq-status-table{font-size:12px}.sq-steps li{grid-template-columns:34px 1fr}}
+</style>
+<script id="sidequest-final-extras-script">
+/* SIDEQUEST final extras: info pages, inline validation, contact form, clearer tracking errors */
+(function(){
+const INFO_TABS=[['about','About'],['how','How it works'],['contact','Contact'],['privacy','Privacy'],['terms','Reporting rules']];
+const EMAIL_RE=/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+const REF_RE=/^SQ-[A-Z0-9]{2,}-[A-Z0-9]{3,}$/;
+state.infoTab=state.infoTab||'about';
+
+function infoBody(tab){
+ if(tab==='about')return `<h2>About SIDEQUEST</h2>
+ <p>SIDEQUEST: Taft Problem Radar is a student prototype for reporting everyday, non-emergency problems in shared public spaces around Taft–Vito Cruz, near DLSU and Benilde. Think blocked sidewalks, overflowing bins, broken facilities, and crowded transport access.</p>
+ <div class="sq-info-grid">
+  <div class="card flat"><h3>The problem</h3><p>People get used to these problems, don't know where to report them, or feel reporting won't change anything. Repeated complaints about the same issue also get scattered.</p></div>
+  <div class="card flat"><h3>Our approach</h3><p>One shared record per issue. Citizens report or confirm a concern, a coordinator reviews it, and everyone can follow a dated timeline of what happened next.</p></div>
+  <div class="card flat"><h3>Who it's for</h3><p>Students, workers, residents, and commuters who walk around the pilot area every day.</p></div>
+ </div>
+ <p><strong>Made by Hell's Kitchen</strong> for our Web Development final project. This is a classroom demo, not an official government service, and reports are not sent to any agency.</p>`;
+ if(tab==='how')return `<h2>How it works</h2>
+ <ol class="sq-steps">
+  <li><div><h3>Check the map first</h3><p>Open the Area map to see if someone already reported the same problem nearby.</p></div></li>
+  <li><div><h3>Report or confirm</h3><p>If it's already there, press “I experienced this too.” If not, fill in the report form: category, title, description, area, date, landmark, and an optional photo.</p></div></li>
+  <li><div><h3>Save your reference number</h3><p>After submitting you get a reference like SQ-DEMO-0005. Your report stays private until a coordinator reviews it.</p></div></li>
+  <li><div><h3>Coordinator review</h3><p>A coordinator verifies the report, asks for more details if needed, links duplicates, and records where it was referred.</p></div></li>
+  <li><div><h3>Track progress</h3><p>Enter your reference on the Track page to see the status and every dated update.</p></div></li>
+ </ol>
+ <h3 style="margin-top:8px">What each status means</h3>
+ <table class="sq-status-table"><thead><tr><th>Status</th><th>Meaning</th></tr></thead><tbody>
+  <tr><td>Submitted</td><td>Saved and waiting for a coordinator. Only you can see it.</td></tr>
+  <tr><td>Under review</td><td>A coordinator is checking the details and evidence.</td></tr>
+  <tr><td>Needs information</td><td>The coordinator asked you for more details. Reply from the Track page.</td></tr>
+  <tr><td>Verified</td><td>Confirmed and now visible on the public map.</td></tr>
+  <tr><td>Referred / In progress</td><td>Sent to a proposed office, or there's a recorded action update.</td></tr>
+  <tr><td>Resolved</td><td>Marked fixed with a note. You can request a recheck if it comes back.</td></tr>
+  <tr><td>Rejected / Duplicate</td><td>Out of scope, or linked to an existing report, with a reason given.</td></tr>
+ </tbody></table>`;
+ if(tab==='contact')return `<h2>Contact us</h2>
+ <div class="sq-info-grid">
+  <div class="card flat"><h3>Send the team a message</h3>
+   <form id="sqContactForm" class="sq-contact-form" novalidate>
+    <div class="form-group"><label for="sqContactName">Your name <span class="sq-optional">(optional)</span></label><input class="field" id="sqContactName" name="name" maxlength="60" placeholder="e.g. Juan"></div>
+    <div class="form-group"><label for="sqContactEmail">Email <span class="required">*</span></label><input class="field" id="sqContactEmail" name="email" type="email" maxlength="120" placeholder="name@example.com" autocomplete="email" aria-describedby="sqContactEmailErr"><span class="sq-field-error" id="sqContactEmailErr" hidden></span></div>
+    <div class="form-group"><label for="sqContactTopic">Topic <span class="required">*</span></label><select class="select" id="sqContactTopic" name="topic" aria-describedby="sqContactTopicErr"><option value="">Choose a topic</option><option>Question about a report</option><option>Problem using the website</option><option>Suggestion</option><option>Privacy request</option></select><span class="sq-field-error" id="sqContactTopicErr" hidden></span></div>
+    <div class="form-group"><label for="sqContactMsg">Message <span class="required">*</span></label><textarea class="textarea" id="sqContactMsg" name="message" maxlength="600" placeholder="How can we help? (at least 15 characters)" aria-describedby="sqContactMsgErr"></textarea><span class="sq-counter" data-counter-for="sqContactMsg">0 / 600</span><span class="sq-field-error" id="sqContactMsgErr" hidden></span></div>
+    <button class="btn" type="submit">Send message ↗</button>
+    <p class="muted tiny">Demo only: messages are saved in this browser, not emailed.</p>
+   </form>
+  </div>
+  <div class="card flat"><h3>Emergency hotlines</h3><p>SIDEQUEST is for non-emergency concerns only. In an emergency, call:</p>
+   <ul class="sq-hotlines"><li><span>National Emergency Hotline</span><a href="tel:911">911</a></li><li><span>Philippine Red Cross</span><a href="tel:143">143</a></li></ul>
+   <h3 style="margin-top:16px">Pilot coordinator</h3><p>Report-related questions go to the pilot area coordinator through the Track page: use “Provide requested information” on your report.</p>
+  </div>
+ </div>`;
+ if(tab==='privacy')return `<h2>Privacy policy</h2>
+ <div class="sq-info-grid">
+  <div class="card flat"><h3>What we collect</h3><ul><li>Report details: category, title, description, area, landmark, date observed.</li><li>Optional: a photo, a map pin, and a private contact email.</li><li>Your demo account name and XP.</li></ul></div>
+  <div class="card flat"><h3>What stays private</h3><ul><li>New reports are visible only to you and the coordinator until reviewed.</li><li>Your contact email is never shown publicly.</li><li>Public cards show the issue, not who reported it.</li></ul></div>
+  <div class="card flat"><h3>Where it's stored</h3><p>In this prototype, everything is saved in your own browser (local storage). Nothing is sent to a server or government office. Clearing your browser data deletes it.</p></div>
+ </div>
+ <p>Please don't include names, faces, license plates, or other personal details in descriptions or photos. A real launch would need a secure database, encrypted accounts, and a data-privacy review under the Data Privacy Act of 2012.</p>`;
+ return `<h2>Reporting rules</h2>
+ <div class="sq-info-grid">
+  <div class="card flat"><h3>Do</h3><ul><li>Report real, non-emergency problems in public spaces.</li><li>Describe what you saw and where, clearly.</li><li>Confirm an existing report instead of making a duplicate.</li><li>Take photos only when it's safe.</li></ul></div>
+  <div class="card flat"><h3>Don't</h3><ul><li>Report emergencies here. Call 911.</li><li>Accuse or name private people.</li><li>Upload faces, plates, or private property.</li><li>Submit false or spam reports.</li></ul></div>
+  <div class="card flat"><h3>How we prevent abuse</h3><ul><li>Sign-in is required to report.</li><li>Every report is reviewed before it goes public.</li><li>One confirmation per person per issue.</li><li>XP is only given for verified reports, never for volume.</li></ul></div>
+ </div>`;
+}
+window.infoPage=function(){let t=state.infoTab||'about';return `<div class="page sq-info-page"><div class="page-header"><div><div class="eyebrow">About SIDEQUEST</div><h1>Help &amp; information</h1><p>Who we are, how reporting works, and how your information is handled.</p></div></div>
+ <div class="sq-info-tabs" role="tablist" aria-label="Information pages">${INFO_TABS.map(([k,l])=>`<button type="button" role="tab" id="sqTab-${k}" aria-controls="sqInfoPanel" aria-selected="${k===t}" data-info-tab="${k}">${l}</button>`).join('')}</div>
+ <section class="card sq-info-panel" id="sqInfoPanel" role="tabpanel" aria-labelledby="sqTab-${t}">${infoBody(t)}</section></div>`};
+
+window.sqOpenInfo=async function(tab){state.infoTab=tab||'about';await go('info')};
+
+/* ---------- report form validation ---------- */
+function fieldWrap(el){return el.closest('.form-group')||el.parentElement}
+function setErr(id,msg){
+ const el=id==='category'?document.querySelector('.category-choice'):document.getElementById(id);if(!el)return;
+ const box=el;
+ let errId='sqErr-'+id, err=document.getElementById(errId);
+ if(!err){err=document.createElement('span');err.className='sq-field-error';err.id=errId;err.setAttribute('aria-live','polite');
+  if(id==='category')box.after(err);else if(id==='policy')el.closest('label').after(err);else if(id==='photo')el.closest('.upload').after(err);else fieldWrap(el).appendChild(err)}
+ if(msg){err.textContent=msg;err.hidden=false;box.classList.add('sq-invalid');if(id!=='category'){el.setAttribute('aria-invalid','true');el.setAttribute('aria-describedby',errId)}}
+ else{err.hidden=true;err.textContent='';box.classList.remove('sq-invalid');el.removeAttribute?.('aria-invalid')}
+}
+const LABELS={category:'Category',title:'Short title',description:'Description',zone:'Area',observed:'Date observed',landmark:'Nearest landmark',sqContactEmailReport:'Private contact email',photo:'Photo',policy:'Confirmation'};
+function checkReportField(form,id){
+ const v=k=>String((form.elements[k]&&form.elements[k].value)||'').trim();
+ switch(id){
+  case 'category':return form.querySelector('input[name=category]:checked')?'':'Choose a category, or select Other if none fits.';
+  case 'title':{let n=v('title').length;return !n?'Enter a short title for the concern.':n<8?`Title is too short: ${n} of at least 8 characters.`:n>110?'Title must be 110 characters or fewer.':''}
+  case 'description':{let n=v('description').length;return !n?'Describe what you observed so a coordinator can understand the concern.':n<25?`Description is too short: ${n} of at least 25 characters.`:n>1200?'Description must be 1,200 characters or fewer.':''}
+  case 'zone':return v('zone')?'':'Select the area where you saw the concern.';
+  case 'observed':{let d=v('observed');if(!d)return 'Enter the date you observed the concern.';if(!/^\d{4}-\d{2}-\d{2}$/.test(d)||isNaN(new Date(d)))return 'Enter a valid date.';if(d>today())return 'The date observed cannot be in the future.';if(d<'2025-01-01')return 'Choose a date from 2025 onward.';return ''}
+  case 'landmark':{let n=v('landmark').length;return !n?'Add a clear landmark so the concern can be found.':n<5?'Landmark is too short: use at least 5 characters.':''}
+  case 'sqContactEmailReport':{let e=v('contact_email');return !e||EMAIL_RE.test(e)?'':'Check your email format (like name@example.com), or leave this optional field blank.'}
+  case 'photo':{let f=form.elements.photo?.files?.[0];if(!f)return '';if(!['image/jpeg','image/png','image/webp'].includes(f.type))return 'Use a JPG, PNG or WebP photo. Other file types are not supported.';if(f.size>5*1024*1024)return `Photo is ${(f.size/1048576).toFixed(1)} MB. Choose one up to 5 MB, or remove it and continue.`;return ''}
+  case 'policy':return form.elements.policy?.checked?'':'Tick the box to confirm your report is accurate and non-emergency.';
+ }return ''}
+const ORDER=['category','title','description','zone','observed','landmark','photo','sqContactEmailReport','policy'];
+window.sqValidateReport=function(form){
+ const errs=[];ORDER.forEach(id=>{let m=checkReportField(form,id);setErr(id,m);if(m)errs.push([id,m])});
+ let sum=document.getElementById('sqErrorSummary');
+ if(!errs.length){sum?.remove();return true}
+ if(!sum){sum=document.createElement('div');sum.id='sqErrorSummary';sum.className='sq-error-summary';sum.setAttribute('role','alert');sum.tabIndex=-1;form.prepend(sum)}
+ sum.innerHTML=`<h2>Please fix ${errs.length} ${errs.length===1?'thing':'things'} before submitting</h2><ul>${errs.map(([id,m])=>`<li><a href="#${id}" data-sq-jump="${id}">${LABELS[id]}: ${safe(m)}</a></li>`).join('')}</ul><p class="tiny" style="margin-top:6px">Everything you already typed has been kept.</p>`;
+ sum.focus({preventScroll:true});sum.scrollIntoView({behavior:'smooth',block:'start'});
+ notify(`Please fix ${errs.length} field${errs.length===1?'':'s'} marked in red.`,true);
+ return false};
+/* run these checks before any other submit step (e.g. the review pop-up in enhancements.js) */
+window.addEventListener('submit',e=>{if(e.target.id==='reportForm'&&state.user&&!sqValidateReport(e.target)){e.preventDefault();e.stopImmediatePropagation()}},true);
+
+/* replace the old one-at-a-time checks */
+window.handleReport=async function(e){e.preventDefault();let form=e.target,f=new FormData(form);
+ if(!state.user){for(let k of ['title','category','description','zone','observed','landmark'])state.form[k]=f.get(k)||'';notify('Please create an account or sign in before submitting.',true);authModal('register');return}
+ if(!sqValidateReport(form))return;
+ let photo=f.get('photo');
+ if(photo?.size){try{f.set('evidence_preview',await sidequestPhotoPreview(photo))}catch(err){setErr('photo','Could not read the selected photo. Choose a different image.');return}}
+ f.set('policy','yes');if(state.pick.lat!=null){f.set('lat',state.pick.lat);f.set('lng',state.pick.lng)}
+ let submit=$('#sendReport');submit.disabled=true;submit.textContent='Submitting…';
+ try{let v=await api('/api/reports',{method:'POST',body:f});state.form={done:v.ref};state.pick={lat:null,lng:null};notify('Report saved. It is awaiting coordinator review.');try{if(typeof v11DraftKey==='function')localStorage.removeItem(v11DraftKey())}catch(_){}await refreshBoot();await render()}
+ catch(err){notify(err.message,true);submit.disabled=false;submit.textContent='Submit concern ↗'}};
+
+/* add optional private email + character counters to the report form */
+function enhanceReportForm(){
+ const form=document.getElementById('reportForm');if(!form||form.dataset.sqEnhanced)return;form.dataset.sqEnhanced='1';
+ const policy=form.querySelector('.check-label');
+ if(policy&&!document.getElementById('sqContactEmailReport')){
+  const g=document.createElement('div');g.className='form-section';
+  g.innerHTML=`<div class="form-title"><span class="step-number">4</span>Private contact (optional)</div><div class="form-group"><label for="sqContactEmailReport">Email for follow-up <span class="sq-optional">(optional, never shown publicly)</span></label><input class="field" id="sqContactEmailReport" name="contact_email" type="email" maxlength="120" placeholder="name@example.com" autocomplete="email" value="${safe(state.form.contact_email||'')}"><span class="helper">Only the coordinator can see this, in case they need more details.</span></div>`;
+  policy.before(g)}
+ [['title',110],['description',1200]].forEach(([id,max])=>{const el=document.getElementById(id);if(!el||fieldWrap(el).querySelector('.sq-counter'))return;if(id==='description'&&document.getElementById('v11Count'))return;const c=document.createElement('span');c.className='sq-counter';c.dataset.counterFor=id;c.setAttribute('aria-hidden','true');el.after(c);updateCounter(el,max)});
+ const obs=document.getElementById('observed');if(obs)obs.min='2025-01-01';
+}
+function updateCounter(el,max){const c=document.querySelector(`[data-counter-for="${el.id}"]`);if(!c)return;max=max||+el.maxLength;const n=el.value.length;c.textContent=`${n} / ${max}`;c.classList.toggle('sq-over',n>max)}
+
+/* tracking: format check + clear error box */
+window.doTrack=async function(ref){
+ ref=String(ref||'').trim().toUpperCase();const box=document.getElementById('trackResult');
+ const show=(t,m)=>{state.currentReport=null;if(box)box.innerHTML=`<div class="sq-track-error" role="alert"><strong>${t}</strong>${m}</div>`;notify(t,true)};
+ if(!ref)return show('Enter a reference ID.','Reference IDs look like <b>SQ-DEMO-0005</b>. You get one after submitting a report.');
+ if(!REF_RE.test(ref))return show('That doesn’t look like a SIDEQUEST reference.','Reference IDs start with SQ- and look like <b>SQ-DEMO-0005</b>. Check for missing dashes or typos.');
+ try{let v=await api('/api/track/'+encodeURIComponent(ref));state.currentReport=v.report;closeModal();if(state.page!=='track')await go('track');else box.innerHTML=trackDetails(v.report)}
+ catch(e){show('No report found with that reference.',`${safe(e.message)} Check the number on your confirmation screen, or open <b>My Activity</b> to see your reports.`)}};
+
+/* contact form */
+function contactErr(id,msg){const el=document.getElementById(id),er=document.getElementById(id+'Err');if(!el||!er)return;er.textContent=msg;er.hidden=!msg;el.classList.toggle('sq-invalid',!!msg);msg?el.setAttribute('aria-invalid','true'):el.removeAttribute('aria-invalid')}
+function handleContact(e){e.preventDefault();const f=e.target,v=k=>String(f.elements[k].value||'').trim();let bad=0;
+ const em=v('email');contactErr('sqContactEmail',!em?'Enter your email so we can reply.':!EMAIL_RE.test(em)?'Check your email format, like name@example.com.':'');
+ contactErr('sqContactTopic',v('topic')?'':'Choose a topic.');
+ const m=v('message').length;contactErr('sqContactMsg',!m?'Write a message.':m<15?`Message is too short: ${m} of at least 15 characters.`:'');
+ bad=[...f.querySelectorAll('.sq-field-error')].filter(x=>!x.hidden);
+ if(bad.length){bad[0].previousElementSibling?.focus?.();f.querySelector('[aria-invalid=true]')?.focus();notify('Please fix the highlighted fields.',true);return}
+ try{let list=JSON.parse(localStorage.getItem('sidequest-contact-messages')||'[]');list.push({name:v('name'),email:em,topic:v('topic'),message:v('message'),sent:new Date().toISOString()});localStorage.setItem('sidequest-contact-messages',JSON.stringify(list))}catch(_){}
+ f.outerHTML=`<div class="completion" role="status" style="padding:24px"><div class="big-check">✓</div><h3>Message saved</h3><p class="muted small">Thanks! In this demo your message is stored in this browser. A real version would email the team.</p></div>`;
+ notify('Message saved. Thank you!')}
+
+/* wire everything up */
+const _render=window.render||render;
+window.render=async function(){await _render.apply(this,arguments);if(state.page==='report')enhanceReportForm();};
+try{render=window.render}catch(_){}
+try{handleReport=window.handleReport;doTrack=window.doTrack}catch(_){}
+document.addEventListener('click',e=>{
+ const t=e.target.closest('[data-info-tab]');if(t){state.infoTab=t.dataset.infoTab;const p=document.getElementById('main');p.innerHTML=infoPage();document.getElementById('sqTab-'+state.infoTab)?.focus();return}
+ const o=e.target.closest('[data-info-open]');if(o){e.preventDefault();e.stopPropagation();sqOpenInfo(o.dataset.infoOpen);return}
+ const j=e.target.closest('[data-sq-jump]');if(j){e.preventDefault();const id=j.dataset.sqJump;const el=id==='category'?document.querySelector('input[name=category]'):document.getElementById(id);el?.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>el?.focus(),250)}
+},true);
+document.addEventListener('keydown',e=>{const t=e.target.closest?.('[data-info-tab]');if(!t||!['ArrowRight','ArrowLeft'].includes(e.key))return;const keys=INFO_TABS.map(x=>x[0]);let i=keys.indexOf(t.dataset.infoTab)+(e.key==='ArrowRight'?1:-1);i=(i+keys.length)%keys.length;state.infoTab=keys[i];document.getElementById('main').innerHTML=infoPage();document.getElementById('sqTab-'+keys[i])?.focus()});
+document.addEventListener('submit',e=>{if(e.target.matches('#sqContactForm'))handleContact(e)});
+document.addEventListener('input',e=>{const el=e.target;
+ if(el.id==='title'||el.id==='description'||el.id==='sqContactMsg')updateCounter(el);
+ const form=el.closest('#reportForm');
+ if(form&&document.getElementById('sqErrorSummary')){let id=el.name==='category'?'category':el.name==='contact_email'?'sqContactEmailReport':el.id;if(ORDER.includes(id))setErr(id,checkReportField(form,id))}
+ if(el.closest('#sqContactForm')&&el.getAttribute('aria-invalid'))contactErr(el.id,'');
+});
+document.addEventListener('change',e=>{const form=e.target.closest('#reportForm');if(form&&document.getElementById('sqErrorSummary')){let id=e.target.name==='category'?'category':e.target.id;if(ORDER.includes(id))setErr(id,checkReportField(form,id))}});
+if(state.page==='report')enhanceReportForm();
+})();
+</script>
 </body></html>
