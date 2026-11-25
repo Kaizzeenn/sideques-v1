@@ -1530,7 +1530,9 @@ label .qs-cat{margin-right:4px;color:var(--road,#0c5a37)}
 body .v7-home{gap:26px}
 body .v7-hero{align-items:stretch}
 /* common concerns photo row */
-.sq-common{margin:4px 0 0}
+.sq-common{margin:10px 0 34px}
+.sq-cc-credit{margin:10px 0 0;font-size:12px;color:var(--qs-muted)}.sq-cc-credit a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.v7-home > .v7-below{margin-top:8px}
 .sq-common .v7-section-heading{margin-bottom:14px}
 .sq-common-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 .sq-cc{position:relative;display:block;aspect-ratio:4/4.6;border:0;padding:0;border-radius:10px;overflow:hidden;cursor:pointer;background:#cdc5b5;text-align:left;font:inherit;color:#fff;box-shadow:0 1px 0 rgba(0,0,0,.06)}
@@ -1802,22 +1804,22 @@ const ART={
   '<rect x="214" y="200" width="80" height="6" fill="#3f6f55"/><path d="M216 206v58M292 206v58" stroke="#3f6f55" stroke-width="4"/>'+
   PERSON(222,282,'#f1b84b',.85)+PERSON(240,286,'#6aa3c8',.9)+PERSON(258,280,'#d8443a',.85)+PERSON(276,288,'#7cae58',.9)+PERSON(204,290,'#b384c9',.85)+PERSON(186,300,'#e07b39',.9)};
 const COMMON=[
- {cat:'Accessibility & Mobility',art:'sidewalk',photo:'photos/taft-sidewalk.jpg',title:'Vendor carts block the sidewalk',place:'Taft Ave · near Vito Cruz LRT'},
- {cat:'Cleanliness & Sanitation',art:'bin',photo:'photos/taft-bins.jpg',title:'Overflowing waste bins',place:'Taft Ave · beside the university'},
- {cat:'Public Infrastructure',art:'pavement',photo:'photos/vito-cruz-pavement.jpg',title:'Cracked, uneven pavement',place:'Vito Cruz LRT stairs'},
- {cat:'Public Transport Access',art:'jeep',photo:'photos/ocampo-loading.jpg',title:'Crowded jeepney loading',place:'Ocampo St corner'}];
+ {cat:'Accessibility & Mobility',art:'sidewalk',photo:'photos/taft-sidewalk.jpg',web:'https://commons.wikimedia.org/wiki/Special:FilePath/04475jfTaft_Avenue_Vito_Cruz_LRT_Station_Malate_Manilafvf_03.jpg?width=800',title:'Vendor carts block the sidewalk',place:'Taft Ave · near Vito Cruz LRT'},
+ {cat:'Cleanliness & Sanitation',art:'bin',photo:'photos/taft-bins.jpg',web:'https://commons.wikimedia.org/wiki/Special:FilePath/Taft_Avenue_-_DLSU_%28Malate%2C_Manila%3B_01-01-2020%29.jpg?width=800',title:'Overflowing waste bins',place:'Taft Ave · beside the university'},
+ {cat:'Public Infrastructure',art:'pavement',photo:'photos/vito-cruz-pavement.jpg',web:'https://commons.wikimedia.org/wiki/Special:FilePath/04531jfTaft_Avenue_Pablo_Ocampo_Street_Landscape_Mall_De_La_Salle_Malate_Manilafvf_08.jpg?width=800',title:'Cracked, uneven pavement',place:'Vito Cruz LRT stairs'},
+ {cat:'Public Transport Access',art:'jeep',photo:'photos/ocampo-loading.jpg',web:'https://commons.wikimedia.org/wiki/Special:FilePath/440Barangays_Zone_112%2C_District_V_Malate_Pablo_Ocampo_Street.jpg?width=800',title:'Crowded jeepney loading',place:'Ocampo St corner'}];
 async function fixCommon(){
  const h=q('.v7-home');if(!h||q('.sq-common',h))return;
  const anchor=q('.v7-numbers',h)||q('.v7-below',h);if(!anchor)return;
  const sec=document.createElement('section');sec.className='sq-common';sec.setAttribute('aria-labelledby','sqCommonTitle');
- sec.innerHTML=`<div class="v7-section-heading"><div><h2 id="sqCommonTitle">Common concerns around Taft</h2><p>The problems people report most, and where they happen.</p></div><button class="v7-text-action" data-go="explore">See all concerns</button></div><div class="sq-common-row"></div>`;
+ sec.innerHTML=`<div class="v7-section-heading"><div><h2 id="sqCommonTitle">Common concerns around Taft</h2><p>The problems people report most, and where they happen.</p></div><button class="v7-text-action" data-go="explore">See all concerns</button></div><div class="sq-common-row"></div><p class="sq-cc-credit">Street photos of the pilot area from <a href="https://commons.wikimedia.org/wiki/Category:Taft_Avenue_(Metro_Manila)" target="_blank" rel="noopener">Wikimedia Commons</a> contributors (free license). A drawing shows if a photo can’t load.</p>`;
  anchor.after(sec);
  let list=[];try{list=(await api('/api/reports')).reports||[]}catch(_){}
  const row=q('.sq-common-row',sec);if(!row)return;
  row.innerHTML=COMMON.map(c=>{const rs=list.filter(r=>r.category===c.cat).sort((a,b)=>String(b.updated||b.created||'').localeCompare(String(a.updated||a.created||'')));const latest=rs[0];const felt=rs.reduce((n,r)=>n+(+r.confirmations||0),0);
   const st=latest?((typeof STATUS_LABELS!=='undefined'&&STATUS_LABELS[latest.status])||latest.status):'';
   const act=latest?`data-issue="${esc(latest.id)}"`:`data-sq-go="explore"`;
-  return `<button type="button" class="sq-cc" ${act} aria-label="${esc(c.title)}, ${esc(c.place)}${latest?', latest status '+esc(st):''}"><svg class="sq-cc-art" viewBox="0 0 300 340" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${ART[c.art]()}</svg><img class="sq-cc-photo" src="${c.photo}" alt="" loading="lazy" onerror="this.remove()"><span class="sq-cc-chip">${ic(CATN[c.cat]||'pin')}${rs.length} report${rs.length===1?'':'s'}${felt?` · ${felt} felt this`:''}</span><span class="sq-cc-text"><strong>${esc(c.title)}</strong><small>${esc(c.place)}</small></span>${st?`<span class="sq-cc-status">${esc(st)}</span>`:''}</button>`}).join('');
+  return `<button type="button" class="sq-cc" ${act} aria-label="${esc(c.title)}, ${esc(c.place)}${latest?', latest status '+esc(st):''}"><svg class="sq-cc-art" viewBox="0 0 300 340" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${ART[c.art]()}</svg><img class="sq-cc-photo" src="${c.photo}" data-alt="${c.web}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="if(this.dataset.alt){this.src=this.dataset.alt;this.dataset.alt=''}else{this.remove()}"><span class="sq-cc-chip">${ic(CATN[c.cat]||'pin')}${rs.length} report${rs.length===1?'':'s'}${felt?` · ${felt} felt this`:''}</span><span class="sq-cc-text"><strong>${esc(c.title)}</strong><small>${esc(c.place)}</small></span>${st?`<span class="sq-cc-status">${esc(st)}</span>`:''}</button>`}).join('');
 }
 
 /* ---------- explore ---------- */
