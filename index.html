@@ -878,7 +878,7 @@ function faqPage(){return `<div class="page sq-faq-page">
  <div class="sq-faq-end"><h2>Ready to help your community?</h2><p>Explore public concerns or create a new report. Remember that this is a classroom prototype, not an official reporting service.</p><div class="row wrap"><button class="btn" data-go="report">Report a concern</button><button class="btn btn-white" data-go="explore">Explore the map</button></div></div>
  </div>`}
 
-async function render(){if(state.page==='explore'||state.page==='home'){await loadReports();await loadMyMapIssues();}if(state.page==='activity'&&state.user)state.mine=await api('/api/my');if(state.page==='admin')state.admin=await api('/api/admin/queue');$('#main').innerHTML=({home:homePage,explore:explorePage,report:reportPage,track:trackPage,activity:activityPage,faq:faqPage,info:()=>window.infoPage(),admin:adminPage})[state.page]();initMaps();updateNav();if(state.page==='report')checkMatches()}
+async function render(){if(state.page==='explore'||state.page==='home'){await loadReports();await loadMyMapIssues();}if(state.page==='activity'&&state.user)state.mine=await api('/api/my');if(state.page==='admin')state.admin=await api('/api/admin/queue');$('#main').innerHTML=({home:homePage,explore:explorePage,report:reportPage,track:trackPage,activity:activityPage,faq:faqPage,info:()=>window.infoPage(),rewards:()=>window.sqRewardsPage(),admin:adminPage})[state.page]();initMaps();updateNav();if(state.page==='report')checkMatches()}
 function authModal(tab='login'){state.authTab=tab;openModal(`<div class="auth-header"><div class="auth-mascot"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyOTAgMjkwIiBmaWxsPSJub25lIj4KIDxlbGxpcHNlIGN4PSIxNDQiIGN5PSIyNzMiIHJ4PSI5MiIgcnk9IjExIiBmaWxsPSIjMjU1QzQ5IiBvcGFjaXR5PSIuMTIiLz4KIDxwYXRoIGQ9Ik0xMDQgMTEwYy02LTI1LTI1LTQyLTMzLTU3LTQtOC0zLTE1IDYtMTkgMTAtNSAyMyAxIDMzIDE1IDEwIDEzIDE2IDMyIDE5IDUxIiBmaWxsPSIjNEJDRjc5IiBzdHJva2U9IiMyMjRDNDAiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiA8cGF0aCBkPSJNMTMyIDEwM0MxMTUgNzggMTA2IDUxIDExOCAyNmM5LTIwIDI0LTIyIDM2LTQgMTMgMjEgMTQgNDYgNSA3OCIgZmlsbD0iIzg0REI2MiIgc3Ryb2tlPSIjMjI0QzQwIiBzdHJva2Utd2lkdGg9IjUiLz4KIDxwYXRoIGQ9Ik0xNjggMTA5YzE1LTIyIDI3LTM5IDQzLTQ5IDEyLTcgMjMtNSAyNSA3IDMgMTgtMTkgNDYtNTEgNTYiIGZpbGw9IiM1QkQzNkYiIHN0cm9rZT0iIzIyNEM0MCIgc3Ryb2tlLXdpZHRoPSI1Ii8+CiA8cGF0aCBkPSJNOTggMTA5Yy0yNC04LTQzLTE4LTU3LTM2LTEyLTE2LTctMjggOS0yNyAyMSAxIDQzIDIyIDU5IDQ2IiBmaWxsPSIjOERERTc2IiBzdHJva2U9IiMyMjRDNDAiIHN0cm9rZS13aWR0aD0iNSIvPgogPHBhdGggZD0iTTEwMCAxMjEgODYgMTUyIDkyIDIzOVE5OCAyNTkgMTQyIDI2M1ExOTQgMjYzIDIwMCAyNDFMMjEwIDE0MyAxOTEgMTE0WiIgZmlsbD0iI0MxOEE1RCIgc3Ryb2tlPSIjNUE0NDMzIiBzdHJva2Utd2lkdGg9IjYiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KIDxwYXRoIGQ9Ik0xMDUgMTI0UTE0NSAxNDQgMTk5IDEyNCIgc3Ryb2tlPSIjODQ1NjNFIiBzdHJva2Utd2lkdGg9IjciIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogPHBhdGggZD0iTTExMyAxNDNjLTEyIDI4LTEwIDc1LTMgMTAxbTY1LTk5YzggMzUgMyA2Ny0xIDkzIiBzdHJva2U9IiNFQUMxOTgiIHN0cm9rZS13aWR0aD0iNiIgb3BhY2l0eT0iLjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogPHBhdGggZD0iTTEwMCAxOTFjLTE5LTEyLTM4LTctNDIgNC02IDE3IDEzIDI3IDQwIDIxbTEwMy0yNWMyMC0xMSAzNS01IDM5IDYgNiAxNy0xMSAyNy0zNyAyMSIgZmlsbD0iI0Q2OUI2RSIgc3Ryb2tlPSIjNUE0NDMzIiBzdHJva2Utd2lkdGg9IjUiLz4KIDxlbGxpcHNlIGN4PSIxMjYiIGN5PSIxODgiIHJ4PSI2IiByeT0iOCIgZmlsbD0iIzNEMzEyOSIvPgogPGVsbGlwc2UgY3g9IjE3MSIgY3k9IjE4OCIgcng9IjYiIHJ5PSI4IiBmaWxsPSIjM0QzMTI5Ii8+CiA8ZWxsaXBzZSBjeD0iMTEyIiBjeT0iMjAxIiByeD0iMTAiIHJ5PSI2IiBmaWxsPSIjRTk5NDgyIiBvcGFjaXR5PSIuOCIvPgogPGVsbGlwc2UgY3g9IjE4NSIgY3k9IjIwMSIgcng9IjEwIiByeT0iNiIgZmlsbD0iI0U5OTQ4MiIgb3BhY2l0eT0iLjgiLz4KIDxwYXRoIGQ9Ik0xMzkgMjA2cTkgMTMgMTkgMCIgc3Ryb2tlPSIjM0QzMTI5IiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogPHBhdGggZD0iTTEwNyAyNTNxLTEwIDE0LTIyIDhtOTYtOHExMyAxNCAyMyA2IiBzdHJva2U9IiM1QTQ0MzMiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiA8cGF0aCBkPSJNMTQ1IDI2Yy05IDE4LTEyIDM2LTEyIDU3IiBzdHJva2U9IiM0MjlBNEYiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiA8Y2lyY2xlIGN4PSIyMzUiIGN5PSIxMTkiIHI9IjE3IiBmaWxsPSIjRjhEQzY3IiBzdHJva2U9IiMyNzQ2M0IiIHN0cm9rZS13aWR0aD0iNCIvPgogPHBhdGggZD0iTTIzNCAxMTF2MTdtLTgtOWgxNiIgc3Ryb2tlPSIjMjc0NjNCIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K" alt="SIDEQUEST mascot"></div><div><div class="eyebrow">Welcome to the neighborhood</div><h2 id="modalTitle">${tab==='login'?'Welcome back!':'Join SIDEQUEST'}</h2><p class="muted small">${tab==='login'?'Continue making a difference.':'Your next good deed starts here.'}</p></div></div><div class="auth-switch"><button class="${tab==='login'?'active':''}" data-auth="login">Log in</button><button class="${tab==='register'?'active':''}" data-auth="register">Create account</button></div><form id="authForm"><div class="form-group ${tab==='login'?'hidden':''}"><label for="authName">Display name</label><input class="field" name="alias" id="authName" placeholder="What should we call you?" minlength="2" maxlength="42" ${tab==='register'?'required':''}></div><div class="form-group"><label for="authEmail">Email</label><input class="field" name="email" id="authEmail" type="email" autocomplete="email" placeholder="your@email.com" required></div><div class="form-group"><label for="authPassword">Password</label><input class="field" name="password" id="authPassword" type="password" autocomplete="${tab==='login'?'current-password':'new-password'}" placeholder="${tab==='login'?'Your password':'At least 10 characters'}" minlength="${tab==='login'?1:10}" required></div>${tab==='register'?'<p class="hint">Local demo only: registration creates a browser-only citizen profile, not a secure account. Use a fictional email and disposable demo password.</p>':'<p class="muted small">This is a local classroom demo. Try coordinator@example.test / DemoOnly123! to review reports. Never use a personal password here.</p>'}<button class="btn" style="width:100%;margin-top:18px" type="submit">${tab==='login'?'Log in':'Create account'}</button></form>`)}
 async function handleAuth(e){e.preventDefault();let f=new FormData(e.target);const info={email:String(f.get('email')||''),password:String(f.get('password')||'')};if(state.authTab==='register')info.alias=String(f.get('alias')||'');let btn=e.target.querySelector('button[type=submit]');btn.disabled=true;try{let v=await api(state.authTab==='login'?'/api/auth/login':'/api/auth/register',{method:'POST',json:info});state.user=v.user;closeModal();notify(state.authTab==='register'?'Welcome! Your account is ready. ✓':'Welcome back! 🌱');await refreshBoot();await render()}catch(err){notify(err.message,true)}finally{btn.disabled=false}}
 async function logout(){try{await api('/api/auth/logout',{method:'POST'});state.user=null;state.currentReport=null;await refreshBoot();notify('Signed out of this local demo.');await go('home')}catch(e){notify(e.message,true)}}
@@ -929,7 +929,7 @@ document.addEventListener('submit',async e=>{if(e.target.matches('#authForm'))re
 let searchTimer;document.addEventListener('input',e=>{if(state.page==='report'&&['title','zone','category'].includes(e.target.name)){if(e.target.name==='title')state.form.title=e.target.value;clearTimeout(searchTimer);searchTimer=setTimeout(checkMatches,350)}if(e.target.id==='adminSearch'){let pos=e.target.selectionStart;state.adminSearch=e.target.value;$('#adminContent').innerHTML=adminContent();let field=$('#adminSearch');if(field){field.focus();field.setSelectionRange(pos,pos)}}if(e.target.id==='searchIssues'){state.filters.search=e.target.value;clearTimeout(searchTimer);searchTimer=setTimeout(()=>render(),500)}});
 document.addEventListener('change',async e=>{if(state.page==='report'){if(e.target.name==='category'||e.target.name==='zone'){state.form[e.target.name]=e.target.value;checkMatches()}if(e.target.id==='photo'){let f=e.target.files?.[0];$('#photoName').textContent=f?`${f.name} · ${(f.size/1024).toFixed(0)} KB selected`:''}}if(e.target.id==='zoneFilter'||e.target.id==='catFilter'){state.filters[e.target.id==='zoneFilter'?'zone':'category']=e.target.value;await render()}if(['adminZone','adminStatus','adminCategory'].includes(e.target.id)){state[e.target.id]=e.target.value;$('#adminContent').innerHTML=adminContent()}});
 $('#overlay').addEventListener('click',e=>{if(e.target===$('#overlay'))closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
-(async()=>{try{await refreshBoot();let hash=location.hash.replace('#','');if(['home','explore','report','track','activity','faq','info','admin'].includes(hash))state.page=hash;if(state.page==='admin'&&state.user?.role!=='admin')state.page='home';await render()}catch(e){$('#main').innerHTML=`<div class="empty" style="margin-top:60px"><h2>Could not connect to SIDEQUEST</h2><p>${safe(e.message)}</p><p>This standalone demo runs without a server. Try refreshing the file.</p></div>`;notify(e.message,true)}})();
+(async()=>{try{await refreshBoot();let hash=location.hash.replace('#','');if(['home','explore','report','track','activity','faq','info','rewards','admin'].includes(hash))state.page=hash;if(state.page==='admin'&&state.user?.role!=='admin')state.page='home';await render()}catch(e){$('#main').innerHTML=`<div class="empty" style="margin-top:60px"><h2>Could not connect to SIDEQUEST</h2><p>${safe(e.message)}</p><p>This standalone demo runs without a server. Try refreshing the file.</p></div>`;notify(e.message,true)}})();
 
 </script><script id="sidequest-v3-script">
 /* SIDEQUEST V4 app shell enhancements — demo authentication remains browser-local */
@@ -1420,6 +1420,309 @@ document.addEventListener('input',e=>{const el=e.target;
 });
 document.addEventListener('change',e=>{const form=e.target.closest('#reportForm');if(form&&document.getElementById('sqErrorSummary')){let id=e.target.name==='category'?'category':e.target.id;if(ORDER.includes(id))setErr(id,checkReportField(form,id))}});
 if(state.page==='report')enhanceReportForm();
+})();
+</script>
+<style id="sidequest-humanize-style">
+/* SIDEQUEST Nov 25 cleanup: calmer header, settings menu, cleaner home, rewards */
+:root{--sq-review:#9a5b00;--sq-review-bg:#fff4dc;--sq-review-line:#f3cf86;--sq-done:#16703f;--sq-done-bg:#e3f6e9;--sq-done-line:#9fd8b2;--sq-total:#1f4f9e;--sq-total-bg:#e6eefc;--sq-total-line:#a9c1ef;--sq-conf:#5b3fa6;--sq-conf-bg:#efeafd;--sq-conf-line:#c7b8f2}
+.demo-ribbon{display:none !important}
+/* header */
+.topbar .navlinks [data-nav="faq"],.topbar .navlinks [data-nav="info"],.topbar .navlinks [data-nav="activity"]{display:none !important}
+.topbar #v11LangToggle,.topbar #sqTextSize,.topbar .personalize-trigger,.topbar .demo-label{display:none !important}
+.topbar .brand{gap:10px;align-items:center}
+.topbar .brand .brand-mark,.footer .sq-foot-mark{transform:none !important;background:none !important;box-shadow:none !important;border:0 !important;width:38px;height:38px;padding:0 !important;display:inline-grid;place-items:center}
+.topbar .brand .brand-mark svg{width:38px;height:38px;display:block}
+.sq-wordmark{display:flex;flex-direction:column;line-height:1;text-align:left}
+.sq-wordmark b{font:800 21px/1 'Overpass','Nunito',sans-serif;letter-spacing:-.2px;color:#1d3a2f}
+.sq-wordmark small{font:600 11px/1.2 'Atkinson Hyperlegible','Nunito',sans-serif;color:#5d7268;letter-spacing:.2px;margin-top:3px;text-transform:none}
+.sq-settings-wrap{position:relative}
+.sq-settings-btn{display:inline-flex;align-items:center;gap:7px;min-height:42px;padding:0 14px;border-radius:12px;border:1.5px solid #d6e4da;background:#fff;color:#1d3a2f;font:800 13px 'Nunito',sans-serif;cursor:pointer}
+.sq-settings-btn:hover,.sq-settings-btn[aria-expanded="true"]{background:#eef6f0;border-color:#a8cdb5}
+.sq-settings-btn:focus-visible,.sq-menu button:focus-visible{outline:3px solid #8fd0aa;outline-offset:2px}
+.sq-settings-btn svg{width:18px;height:18px}
+.sq-menu{position:absolute;right:0;top:calc(100% + 8px);width:250px;background:#fff;border:1px solid #dbe7df;border-radius:16px;box-shadow:0 18px 40px rgba(29,58,47,.16);padding:8px;z-index:80}
+.sq-menu[hidden]{display:none}
+.sq-menu .sq-menu-label{font:800 10px 'Nunito',sans-serif;letter-spacing:1.4px;text-transform:uppercase;color:#7a8d83;padding:8px 10px 4px}
+.sq-menu button{display:flex;width:100%;align-items:center;gap:10px;padding:10px;border:0;background:none;border-radius:10px;text-align:left;font:700 14px 'Nunito',sans-serif;color:#22382f;cursor:pointer;min-height:42px}
+.sq-menu button:hover{background:#f0f7f2}
+.sq-menu button .ico{width:26px;height:26px;border-radius:8px;background:#eef5f0;display:grid;place-items:center;font-size:14px;flex:0 0 auto}
+.sq-menu button .val{margin-left:auto;font-size:12px;color:#6b7f75;font-weight:800}
+.sq-menu hr{border:0;border-top:1px solid #e6eee9;margin:6px 4px}
+/* home */
+.v7-home > .v11-region.v11-grid,.v7-home > .v12-garden-summary,.v7-home > .v12-last-section{display:none !important}
+.v7-home .v7-map-panel details,.v7-home .sq-home-hide,#sqRadar details{display:none !important}
+.v7-numbers.sq-stats{display:grid !important;grid-template-columns:repeat(3,1fr);gap:14px;background:none !important;border:0 !important;box-shadow:none !important;padding:0 !important}
+.sq-stat{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:16px;border:1.5px solid;cursor:pointer;text-align:left;font:inherit;min-height:84px}
+.sq-stat .sq-stat-ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:20px;flex:0 0 auto;background:#fff}
+.sq-stat b{display:block;font:800 30px/1 'Overpass','Nunito',sans-serif}
+.sq-stat em{display:block;font-style:normal;font-weight:800;font-size:13px;margin-top:4px}
+.sq-stat small{display:block;font-size:11px;opacity:.85;margin-top:2px}
+.sq-stat.review{background:var(--sq-review-bg);border-color:var(--sq-review-line);color:var(--sq-review)}
+.sq-stat.done{background:var(--sq-done-bg);border-color:var(--sq-done-line);color:var(--sq-done)}
+.sq-stat.total{background:var(--sq-total-bg);border-color:var(--sq-total-line);color:var(--sq-total)}
+.v7-numbers.sq-stats .sq-stat .sq-stat-txt{display:block !important;padding:0 !important;border:0 !important;margin:0 !important;flex:1;min-width:0}.v7-numbers.sq-stats .sq-stat .sq-stat-ico{display:grid !important;padding:0 !important;border:0 !important;margin:0 !important}.v7-numbers.sq-stats .sq-stat b{margin:0 !important}
+.footer strong{font-family:'Overpass','Nunito',sans-serif !important}
+.sq-stat:hover{filter:brightness(.98);transform:translateY(-1px)}
+.sq-stat:focus-visible{outline:3px solid #1d3a2f;outline-offset:2px}
+/* admin metric colors */
+.sq-admin-metrics > *{border-left:6px solid transparent !important}
+.sq-admin-metrics > *:nth-child(1){background:var(--sq-review-bg) !important;border-left-color:var(--sq-review) !important}
+.sq-admin-metrics > *:nth-child(2){background:var(--sq-conf-bg) !important;border-left-color:var(--sq-conf) !important}
+.sq-admin-metrics > *:nth-child(3){background:var(--sq-total-bg) !important;border-left-color:var(--sq-total) !important}
+.sq-admin-metrics > *:nth-child(4){background:var(--sq-done-bg) !important;border-left-color:var(--sq-done) !important}
+.sq-admin-metrics > *:nth-child(1) strong,.sq-admin-metrics > *:nth-child(1) b{color:var(--sq-review) !important}
+.sq-admin-metrics > *:nth-child(2) strong,.sq-admin-metrics > *:nth-child(2) b{color:var(--sq-conf) !important}
+.sq-admin-metrics > *:nth-child(3) strong,.sq-admin-metrics > *:nth-child(3) b{color:var(--sq-total) !important}
+.sq-admin-metrics > *:nth-child(4) strong,.sq-admin-metrics > *:nth-child(4) b{color:var(--sq-done) !important}
+/* explore quick bar + rows */
+.sq-quickbar{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 18px}
+.sq-quickbar button{display:inline-flex;align-items:center;gap:8px;min-height:46px;padding:0 18px;border-radius:14px;border:1.5px solid #cfe0d5;background:#fff;color:#1d3a2f;font:800 14px 'Nunito',sans-serif;cursor:pointer}
+.sq-quickbar button.primary{background:#1f5a40;border-color:#1f5a40;color:#fff}
+.sq-quickbar .count{background:rgba(255,255,255,.22);border-radius:999px;padding:2px 9px;font-size:12px}
+.sq-quickbar button:not(.primary) .count{background:#e8f2ec}
+.sq-row{display:flex;gap:10px;align-items:stretch}
+.sq-row > button[data-issue]{flex:1;min-width:0}
+.sq-row .sq-me-too{flex:0 0 auto;border-radius:14px;border:1.5px solid #cfe0d5;background:#f3faf5;color:#1f5a40;font:800 13px 'Nunito',sans-serif;padding:0 14px;cursor:pointer;max-width:150px;line-height:1.25}
+.sq-row .sq-me-too:hover{background:#e3f3e8}
+/* report: check first banner */
+.sq-check-first{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;background:#eef6ff;border:1.5px solid #bcd3f2;border-radius:16px;padding:14px 16px;margin:0 0 18px;color:#1f3b63}
+.sq-check-first p{margin:0;font-size:14px;line-height:1.5}
+.sq-check-first button{min-height:42px;padding:0 16px;border-radius:12px;border:0;background:#1f4f9e;color:#fff;font:800 13px 'Nunito',sans-serif;cursor:pointer}
+/* all reports modal */
+.sq-all-search{width:100%;margin:6px 0 12px}
+.sq-all-list{display:grid;gap:10px;max-height:58vh;overflow:auto;padding-right:4px}
+.sq-all-item{display:grid;grid-template-columns:40px 1fr;gap:12px;border:1px solid #dbe7df;border-radius:14px;padding:12px;background:#fff}
+.sq-all-item .ic{width:40px;height:40px;border-radius:11px;background:#eef5f0;display:grid;place-items:center;font-size:18px}
+.sq-all-item h3{font-size:15px;margin:0 0 3px}
+.sq-all-item p{margin:0;font-size:12px;color:#5d7268}
+.sq-all-item .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+.sq-all-item .acts button{min-height:38px;padding:0 12px;border-radius:10px;font:800 12px 'Nunito',sans-serif;cursor:pointer;border:1.5px solid #cfe0d5;background:#fff;color:#1d3a2f}
+.sq-all-item .acts button.me{background:#1f5a40;border-color:#1f5a40;color:#fff}
+/* draft note */
+.sq-draft-note{font-size:12px;color:#36614b;background:#eef7f1;border-radius:10px;padding:8px 10px;margin-top:8px}
+.sq-draft-photo{display:flex;gap:10px;align-items:center;margin-top:10px}
+.sq-draft-photo img{width:72px;height:72px;object-fit:cover;border-radius:10px;border:1px solid #dbe7df}
+/* rewards */
+.sq-rw-top{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;margin-bottom:16px}
+.sq-level-card{display:flex;gap:20px;align-items:center}
+.sq-ring{--p:0;width:118px;height:118px;border-radius:50%;background:conic-gradient(#2f9e62 calc(var(--p)*1%),#e4efe8 0);display:grid;place-items:center;flex:0 0 auto}
+.sq-ring > div{width:92px;height:92px;border-radius:50%;background:#fff;display:grid;place-items:center;text-align:center}
+.sq-ring b{font:800 34px/1 'Overpass','Nunito',sans-serif;color:#1d3a2f;display:block}
+.sq-ring span{font-size:11px;font-weight:800;color:#5d7268;text-transform:uppercase;letter-spacing:1px}
+.sq-level-card h2{font-size:24px;margin:0 0 4px}
+.sq-level-card p{margin:0 0 10px;color:#4f6158;font-size:14px;line-height:1.6}
+.sq-bar{height:12px;border-radius:999px;background:#e4efe8;overflow:hidden}
+.sq-bar i{display:block;height:100%;background:linear-gradient(90deg,#2f9e62,#7cc89a);border-radius:999px}
+.sq-earn{display:grid;gap:10px}
+.sq-earn div{display:flex;align-items:center;gap:12px;border:1px solid #dbe7df;border-radius:12px;padding:10px 12px;background:#fff}
+.sq-earn b{font:800 16px 'Overpass','Nunito',sans-serif;min-width:58px;text-align:center;border-radius:9px;padding:6px 0}
+.sq-earn .plus{background:#e3f6e9;color:#16703f}.sq-earn .zero{background:#f1f1ef;color:#6b6b66}
+.sq-earn span{font-size:13px;color:#33463d;line-height:1.4}
+.sq-badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px}
+.sq-badge{border:1px solid #dbe7df;border-radius:18px;background:#fff;padding:16px 12px;text-align:center;cursor:pointer;font:inherit;color:inherit;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:236px}
+.sq-badge:hover{box-shadow:0 10px 24px rgba(29,58,47,.12);transform:translateY(-2px)}
+.sq-badge:focus-visible{outline:3px solid #8fd0aa;outline-offset:2px}
+.sq-badge svg{width:118px;height:118px}
+.sq-badge.locked svg{filter:grayscale(1);opacity:.45}
+.sq-badge strong{font-size:14px}
+.sq-badge small{font-size:12px;color:#5d7268}
+.sq-badge .pill{font-size:11px;font-weight:800;border-radius:999px;padding:3px 10px}
+.sq-badge .pill.on{background:#e3f6e9;color:#16703f}.sq-badge .pill.off{background:#f1f1ef;color:#5f5f5a}
+.sq-xp-log{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.sq-xp-log li{display:flex;justify-content:space-between;gap:10px;font-size:13px;border-bottom:1px dashed #dbe7df;padding-bottom:7px}
+.sq-badge-modal{text-align:center}
+.sq-badge-modal svg{width:180px;height:180px}
+@media(max-width:820px){.sq-rw-top{grid-template-columns:1fr}.v7-numbers.sq-stats{grid-template-columns:1fr}.sq-level-card{flex-direction:column;text-align:center}}
+@media(max-width:640px){.sq-settings-btn .lbl{display:none}.sq-settings-btn{padding:0 11px}.sq-menu{position:fixed;left:12px;right:12px;top:72px;width:auto}.sq-row{flex-direction:column}.sq-row .sq-me-too{max-width:none;min-height:42px}.sq-badges{grid-template-columns:repeat(2,1fr)}.sq-badge{min-height:0}.sq-badge svg{width:96px;height:96px}.sq-wordmark b{font-size:18px}}
+</style>
+<script id="sidequest-humanize-script">
+(function(){
+const LOGO=`<svg viewBox="0 0 40 40" aria-hidden="true"><rect x="1" y="1" width="38" height="38" rx="11" fill="#1f5a40"/><path d="M20 8.5c-5.2 0-9.2 4-9.2 9 0 6.4 7.6 13.2 8.4 13.9.5.4 1.1.4 1.6 0 .8-.7 8.4-7.5 8.4-13.9 0-5-4-9-9.2-9z" fill="#f6f3e8"/><path d="M15.8 17.6l3 3 5.6-5.8" fill="none" stroke="#2f9e62" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const GEAR=`<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>`;
+const q=(s,r=document)=>r.querySelector(s), qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=v=>(typeof safe==='function'?safe(v):String(v??''));
+
+/* ---------- header ---------- */
+function fixBrand(){
+ const b=q('.topbar .brand');if(b&&!b.dataset.sqBrand){b.dataset.sqBrand='1';const m=q('.brand-mark',b);if(m)m.innerHTML=LOGO;const t=m?.nextElementSibling;if(t)t.outerHTML='<span class="sq-wordmark"><b>SideQuest</b><small>Taft Radar</small></span>'}
+ const f=q('.footer strong');if(f&&!f.dataset.sqBrand){f.dataset.sqBrand='1';f.innerHTML=`<span class="sq-foot-mark" style="width:24px;height:24px;vertical-align:-6px;margin-right:6px">${LOGO.replace('<svg','<svg width="24" height="24"')}</span>SideQuest`}
+}
+function menuHTML(){
+ const big=q('#sqTextSize')?.getAttribute('aria-pressed')==='true';const lang=(q('#v11LangToggle')?.textContent||'FIL').trim();
+ const u=state.user;
+ return `${u?`<div class="sq-menu-label">Account</div>
+ <button role="menuitem" data-sqm="profile"><span class="ico">👤</span>My profile</button>
+ <button role="menuitem" data-sqm="activity"><span class="ico">📋</span>My activity &amp; reports</button>
+ <button role="menuitem" data-sqm="rewards"><span class="ico">🏅</span>Rewards &amp; badges</button>
+ <button role="menuitem" data-sqm="style"><span class="ico">🎨</span>Style</button><hr>`:`<button role="menuitem" data-sqm="login"><span class="ico">👋</span>Log in / Join</button><hr>`}
+ <div class="sq-menu-label">Display</div>
+ <button role="menuitem" data-sqm="text"><span class="ico">A+</span>Larger text<span class="val">${big?'On':'Off'}</span></button>
+ <button role="menuitem" data-sqm="lang"><span class="ico">🌐</span>Language<span class="val">${lang==='FIL'?'English':'Filipino'}</span></button><hr>
+ <div class="sq-menu-label">Help</div>
+ <button role="menuitem" data-sqm="about"><span class="ico">ℹ️</span>About us</button>
+ <button role="menuitem" data-sqm="faq"><span class="ico">❓</span>FAQ</button>
+ ${u?`<hr><button role="menuitem" data-sqm="logout"><span class="ico">↩</span>Log out</button>`:''}`;
+}
+function buildSettings(){
+ const acts=q('.topbar .nav-actions');if(!acts||q('#sqSettingsBtn'))return;
+ const w=document.createElement('div');w.className='sq-settings-wrap';
+ w.innerHTML=`<button type="button" id="sqSettingsBtn" class="sq-settings-btn" aria-haspopup="true" aria-expanded="false" aria-controls="sqSettingsMenu">${GEAR}<span class="lbl">Settings</span></button><div id="sqSettingsMenu" class="sq-menu" role="menu" aria-label="Settings" hidden></div>`;
+ const acc=q('#accountTop',acts);acc?acts.insertBefore(w,acc):acts.appendChild(w);
+}
+function openMenu(open){const btn=q('#sqSettingsBtn'),m=q('#sqSettingsMenu');if(!btn||!m)return;if(open){m.innerHTML=menuHTML();m.hidden=false;btn.setAttribute('aria-expanded','true');q('button',m)?.focus()}else{m.hidden=true;btn.setAttribute('aria-expanded','false')}}
+async function menuAction(a){openMenu(false);
+ if(a==='profile'){state.profileTab='reports';await go('activity');setTimeout(()=>qa('#main button').find(b=>/Manage account/i.test(b.textContent))?.click(),350);return}
+ if(a==='activity'){state.profileTab='reports';return go('activity')}
+ if(a==='rewards')return go('rewards');
+ if(a==='style')return q('.topbar .personalize-trigger')?.click();
+ if(a==='text')return q('#sqTextSize')?.click();
+ if(a==='lang')return q('#v11LangToggle')?.click();
+ if(a==='about')return window.sqOpenInfo?sqOpenInfo('about'):go('info');
+ if(a==='faq')return go('faq');
+ if(a==='login')return authModal('login');
+ if(a==='logout'){const b=q('[data-signout]');if(b)return b.click();if(typeof logout==='function')return logout()}
+}
+
+/* ---------- home ---------- */
+function fixHome(){
+ const h=q('.v7-home');if(!h||h.dataset.sqHome)return;h.dataset.sqHome='1';
+ const intro=q('.v7-intro p',h);if(intro)intro.textContent='See what’s happening around Taft and report what you spot.';
+ qa('.v7-intro *',h).forEach(el=>{if(/Every concern is reviewed/.test(el.textContent)&&el.children.length<3)el.classList.add('sq-home-hide')});
+ const n=q('.v7-numbers',h);
+ if(n){const v=qa('b',n).map(b=>b.textContent.trim());
+  n.classList.add('sq-stats');
+  n.innerHTML=`<button type="button" class="sq-stat review" data-go="explore"><span class="sq-stat-ico">⏳</span><span class="sq-stat-txt"><b>${esc(v[0]??0)}</b><em>In review or action</em><small>Being checked or worked on</small></span></button>
+  <button type="button" class="sq-stat done" data-go="explore"><span class="sq-stat-ico">✅</span><span class="sq-stat-txt"><b>${esc(v[1]??0)}</b><em>Resolved</em><small>Marked fixed with a note</small></span></button>
+  <button type="button" class="sq-stat total" data-go="explore"><span class="sq-stat-ico">📥</span><span class="sq-stat-txt"><b>${esc(v[2]??0)}</b><em>Reports received</em><small>All reports so far</small></span></button>`}
+ qa('.v7-recognition button[data-go="activity"]',h).forEach(b=>{b.removeAttribute('data-go');b.dataset.sqGo='rewards';b.textContent='My rewards'});
+ const rh=q('.v7-recognition h2',h);if(rh)rh.textContent='Your explorer level';
+ const rp=q('.v7-recognition .sq-reward-heading p',h);if(rp)rp.textContent='Get XP when a coordinator verifies your report (+20) or your “I experienced this too” (+10).';
+}
+
+/* ---------- explore ---------- */
+function fixExplore(){
+ const page=q('#main > .page');if(!page||state.page!=='explore')return;
+ const listSec=qa('section.v11-region',page).find(s=>/Reported concerns/.test(q('h2',s)?.textContent||''));
+ const mapSec=qa('section',page).find(s=>/Community radar/.test(q('h2',s)?.textContent||''));
+ if(listSec&&mapSec&&!listSec.dataset.sqMoved){listSec.dataset.sqMoved='1';mapSec.before(listSec)}
+ const head=q('.page-header',page);
+ if(head&&!q('.sq-quickbar',page)){const n=qa('[data-issue]',listSec||page).filter(x=>x.closest('.v11-map-list')).length;
+  const bar=document.createElement('div');bar.className='sq-quickbar';
+  bar.innerHTML=`<button type="button" class="primary" data-sq-scroll="list">📋 View reported concerns <span class="count">${n}</span></button><button type="button" data-sq-scroll="map">🗺️ Show map</button><button type="button" data-sq-allreports>🔎 Search all reports</button>`;
+  head.after(bar)}
+ if(listSec&&!listSec.id)listSec.id='sqConcernList';if(mapSec&&!mapSec.id)mapSec.id='sqRadar';
+ qa('.v11-map-list > button[data-issue]',page).forEach(b=>{if(b.parentElement.classList.contains('sq-row'))return;const w=document.createElement('div');w.className='sq-row';b.before(w);w.appendChild(b);w.insertAdjacentHTML('beforeend',`<button type="button" class="sq-me-too" data-confirm="${esc(b.dataset.issue)}">🙋 I experienced this too</button>`)});
+}
+
+/* ---------- report: check first + full draft ---------- */
+function fixReport(){
+ const form=q('#reportForm');if(!form||q('.sq-check-first'))return;
+ const card=form.closest('.card')||form;
+ card.insertAdjacentHTML('beforebegin',`<div class="sq-check-first" role="note"><p><strong>Already reported?</strong> Check the list first. If it’s there, tap “I experienced this too” instead of making a new report.</p><button type="button" data-sq-allreports>View all reports</button></div>`);
+ if(state.sqDraftPhoto)showDraftPhoto(state.sqDraftPhoto);
+}
+const DKEY=()=>'sidequest-full-draft-'+(state.user?.id||'guest');
+function readFile(f){return new Promise((res,rej)=>{if(typeof sidequestPhotoPreview==='function'){sidequestPhotoPreview(f).then(res,rej);return}const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)})}
+function showDraftPhoto(src){const up=q('#reportForm .upload');if(!up)return;q('.sq-draft-photo')?.remove();up.insertAdjacentHTML('afterend',`<div class="sq-draft-photo"><img src="${src}" alt="Photo saved in your draft"><div class="sq-draft-note">Photo restored from your draft. It will be sent with your report. <button type="button" class="text-link" data-sq-dropphoto>Remove</button></div></div>`)}
+async function saveDraft(){
+ const f=q('#reportForm');if(!f)return;const v=k=>f.elements[k]?.value||'';
+ const d={category:q('input[name=category]:checked',f)?.value||'',title:v('title'),description:v('description'),zone:v('zone'),observed:v('observed'),landmark:v('landmark'),contact_email:v('contact_email'),policy:!!f.elements.policy?.checked,pick:state.pick?{...state.pick}:null,photo:null,photoName:'',saved:new Date().toISOString()};
+ const file=f.elements.photo?.files?.[0];
+ try{if(file&&['image/jpeg','image/png','image/webp'].includes(file.type)&&file.size<=5*1024*1024){d.photo=await readFile(file);d.photoName=file.name}else if(state.sqDraftPhoto){d.photo=state.sqDraftPhoto;d.photoName='draft photo'}}catch(_){}
+ const parts=[d.category&&'category',d.title&&'title',d.description&&'description',(d.zone||d.landmark)&&'location',d.pick?.lat!=null&&'map pin',d.photo&&'photo',d.contact_email&&'email'].filter(Boolean);
+ try{localStorage.setItem(DKEY(),JSON.stringify(d));notify(parts.length?`Draft saved: ${parts.join(', ')}.`:'Draft saved.')}
+ catch(e){try{d.photo=null;localStorage.setItem(DKEY(),JSON.stringify(d));notify('Draft saved, but the photo was too large to keep. Re-attach it later.',true)}catch(_){notify('Could not save a draft in this browser.',true)}}
+}
+function restoreDraft(){
+ let d;try{d=JSON.parse(localStorage.getItem(DKEY())||'null')}catch(_){}
+ if(!d){notify('No saved draft yet. Tap “Save draft” first.');return}
+ const f=q('#reportForm');if(!f)return;
+ const set=(k,val)=>{const el=f.elements[k];if(el&&val!=null){el.value=val;el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}))}};
+ if(d.category){const r=qa('input[name=category]',f).find(x=>x.value===d.category);if(r){r.checked=true;r.dispatchEvent(new Event('change',{bubbles:true}))}}
+ ['title','description','zone','observed','landmark','contact_email'].forEach(k=>set(k,d[k]));
+ if(f.elements.policy)f.elements.policy.checked=!!d.policy;
+ if(d.pick&&d.pick.lat!=null){state.pick={...d.pick};qa('#pinSelected,#pinSelectedMobile').forEach(p=>p.textContent='Pin restored from your draft.')}
+ if(d.photo){state.sqDraftPhoto=d.photo;showDraftPhoto(d.photo)}
+ notify('Draft restored. Everything you saved is back.');
+}
+
+/* ---------- track: history before status help ---------- */
+function fixTrack(){
+ const t=q('#trackResult');if(!t)return;const help=q('details.v12-compact-doc',t);
+ const hist=qa('.card',t).find(c=>/Progress history/.test(q('h2',c)?.textContent||''));
+ if(help&&hist&&hist.nextElementSibling!==help)hist.after(help);
+}
+
+/* ---------- all reports modal ---------- */
+async function allReports(){
+ let list=[];try{list=(await api('/api/reports')).reports||[]}catch(e){notify(e.message,true);return}
+ const row=r=>`<div class="sq-all-item" data-sq-item="${esc((r.title+' '+r.landmark+' '+r.zone+' '+r.category).toLowerCase())}"><span class="ic">${esc((typeof CATEGORY_ICONS!=='undefined'?CATEGORY_ICONS:{})[r.category]||'📍')}</span><div><h3>${esc(r.title)}</h3><p>${esc(r.landmark)} · ${esc(r.zone)}</p><p style="margin-top:5px">${typeof status==='function'?status(r.status):esc(r.status)} · ${esc(r.confirmations||0)} people experienced this</p><div class="acts"><button type="button" class="me" data-confirm="${esc(r.id)}">🙋 I experienced this too</button><button type="button" data-issue="${esc(r.id)}">Details</button></div></div></div>`;
+ openModal(`<div class="eyebrow">Before you report</div><h2 id="modalTitle" style="margin:10px 0 6px">All reported concerns</h2><p class="intro" style="margin:0 0 6px">If your problem is already here, tap “I experienced this too.” It counts as support and avoids duplicate reports.</p><input id="sqAllSearch" class="field sq-all-search" type="search" placeholder="Search by title, place or category" aria-label="Search reported concerns"><div class="sq-all-list" id="sqAllList">${list.length?list.map(row).join(''):'<p class="muted">No public reports yet.</p>'}</div><div class="modal-actions" style="margin-top:14px"><button class="btn btn-white" data-close>It’s not here, I’ll report it</button></div>`);
+}
+
+/* ---------- rewards ---------- */
+const BADGES=[
+ {lvl:1,name:'New Explorer',desc:'You joined SideQuest and started looking out for Taft.',c1:'#2f9e62',c2:'#1f5a40',shape:'circle',icon:'sprout'},
+ {lvl:2,name:'Neighborhood Helper',desc:'Your reports are starting to help people nearby.',c1:'#3d8bd9',c2:'#1f4f9e',shape:'shield',icon:'hands'},
+ {lvl:3,name:'Radar Scout',desc:'You spot problems others walk past.',c1:'#e0922f',c2:'#9a5b00',shape:'hex',icon:'radar'},
+ {lvl:4,name:'Taft Keeper',desc:'A trusted regular on the Taft–Vito Cruz radar.',c1:'#8b6fd6',c2:'#5b3fa6',shape:'shield',icon:'key'},
+ {lvl:5,name:'Local Legend',desc:'Your work made a visible difference in the area.',c1:'#e5b42a',c2:'#a8741a',shape:'circle',icon:'star'},
+ {lvl:6,name:'Sidewalk Guardian',desc:'Keeps walkways clear and safe for everyone.',c1:'#2aa3a3',c2:'#16706f',shape:'hex',icon:'walk'},
+ {lvl:8,name:'Clean Corner Hero',desc:'Helped keep streets and corners clean.',c1:'#58b947',c2:'#2f7a25',shape:'shield',icon:'leaf'},
+ {lvl:10,name:'Vito Cruz Champion',desc:'The highest SideQuest honor for long-time explorers.',c1:'#d9534f',c2:'#8f2a27',shape:'circle',icon:'crown'}];
+const ICONS={sprout:'<path d="M60 82V60" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M60 62c-14 0-20-9-20-20 12 0 20 7 20 20zM60 58c0-13 8-21 22-21 0 13-9 21-22 21z" fill="#fff"/>',hands:'<path d="M36 66l12-12c4-4 10-4 14 0l4 4 10-10c3-3 8-3 10 0s2 7-1 10L66 78c-4 4-10 4-14 0L36 66z" fill="#fff"/><circle cx="46" cy="44" r="7" fill="#fff"/><circle cx="74" cy="40" r="7" fill="#fff"/>',radar:'<circle cx="60" cy="60" r="24" fill="none" stroke="#fff" stroke-width="4"/><circle cx="60" cy="60" r="13" fill="none" stroke="#fff" stroke-width="4"/><path d="M60 60L78 44" stroke="#fff" stroke-width="5" stroke-linecap="round"/><circle cx="60" cy="60" r="4" fill="#fff"/>',key:'<circle cx="48" cy="56" r="13" fill="none" stroke="#fff" stroke-width="6"/><path d="M59 64l20 20m-8-8l6-6m-1 13l6-6" stroke="#fff" stroke-width="6" stroke-linecap="round"/>',star:'<path d="M60 34l8 17 18 2-13 12 4 18-17-9-17 9 4-18-13-12 18-2z" fill="#fff"/>',walk:'<circle cx="62" cy="36" r="6" fill="#fff"/><path d="M58 46l-8 16 10 4-4 18m10-38l6 14 10 4M54 66l-8 16" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',leaf:'<path d="M40 80c0-26 16-42 44-44-2 28-18 44-44 44z" fill="#fff"/><path d="M42 78c10-12 20-22 34-32" stroke="#2f7a25" stroke-width="4" stroke-linecap="round"/>',crown:'<path d="M36 74l-4-30 16 12 12-20 12 20 16-12-4 30z" fill="#fff"/><rect x="36" y="78" width="48" height="7" rx="3" fill="#fff"/>'};
+function shapePath(s){if(s==='shield')return 'M60 8l40 14v30c0 28-18 48-40 60C38 100 20 80 20 52V22z';if(s==='hex')return 'M60 6l46 26v56l-46 26-46-26V32z';return null}
+function badgeSVG(b,big){const id='g'+b.lvl+(big?'b':'');const sp=shapePath(b.shape);
+ const base=sp?`<path d="${sp}" fill="url(#${id})" stroke="#fff" stroke-width="4"/><path d="${sp}" fill="none" stroke="${b.c2}" stroke-width="2" transform="translate(60 60) scale(.88) translate(-60 -60)" opacity=".6"/>`:`<circle cx="60" cy="58" r="50" fill="url(#${id})" stroke="#fff" stroke-width="4"/><circle cx="60" cy="58" r="42" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="3 5" opacity=".7"/>`;
+ return `<svg viewBox="0 0 120 130" role="img" aria-label="${esc(b.name)} badge"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${b.c1}"/><stop offset="1" stop-color="${b.c2}"/></linearGradient></defs>${base}<g transform="translate(0 -4)">${ICONS[b.icon]||''}</g><rect x="18" y="98" width="84" height="22" rx="6" fill="#fffdf6" stroke="${b.c2}" stroke-width="2"/><text x="60" y="113" text-anchor="middle" font-family="Nunito,Arial,sans-serif" font-size="10" font-weight="800" fill="${b.c2}">LEVEL ${b.lvl}</text></svg>`}
+function xpLog(){try{const d=loadDB();return (d.rewards||[]).filter(r=>r.user_id===state.user?.id).slice(-6).reverse()}catch(_){return []}}
+window.sqRewardsPage=function(){
+ if(!state.user)return `<div class="page"><div class="page-header"><div><div class="eyebrow">Rewards</div><h1>Rewards &amp; badges</h1><p>Log in to see your level and badges.</p></div></div><button class="btn" onclick="authModal('login')">Log in</button></div>`;
+ const xp=Math.max(0,Number(state.user.xp)||0),lvl=Math.floor(xp/100)+1,cur=xp%100,need=100-cur;
+ const title=typeof sqTitle==='function'?sqTitle(lvl):'Explorer';
+ const nextB=BADGES.find(b=>b.lvl>lvl),reps=Math.ceil(need/20),confs=Math.ceil(need/10);
+ const unlocked=BADGES.filter(b=>b.lvl<=lvl).length;
+ const log=xpLog();
+ return `<div class="page sq-rewards-page"><div class="page-header"><div><div class="eyebrow">Rewards</div><h1>Your rewards</h1><p>Help Taft, level up, and unlock SideQuest badges.</p></div><span class="pill-label">${unlocked} of ${BADGES.length} badges unlocked</span></div>
+ <div class="sq-rw-top"><section class="card sq-level-card" aria-label="Your level"><div class="sq-ring" style="--p:${cur}"><div><span>Level</span><b>${lvl}</b></div></div><div style="flex:1;min-width:0"><h2>${esc(title)}</h2><p><strong>${xp} XP</strong> total · <strong>${need} XP</strong> to reach Level ${lvl+1}.</p><div class="sq-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${cur}" aria-label="Progress to next level"><i style="width:${cur}%"></i></div><p style="margin-top:10px">That’s about <strong>${reps} verified report${reps===1?'':'s'}</strong> or <strong>${confs} confirmation${confs===1?'':'s'}</strong>.${nextB?` Next badge: <strong>${esc(nextB.name)}</strong> at Level ${nextB.lvl}.`:''}</p></div></section>
+ <section class="card" aria-label="How to earn XP"><h2 style="font-size:20px;margin:0 0 12px">How to earn XP</h2><div class="sq-earn"><div><b class="plus">+20</b><span>Your report is verified by a coordinator</span></div><div><b class="plus">+10</b><span>Your “I experienced this too” is approved</span></div><div><b class="zero">0</b><span>Duplicates, rejected or unverified reports</span></div></div><p class="muted small" style="margin-top:10px">Every 100 XP = 1 level. XP is for fun and recognition only, not money.</p></section></div>
+ <section class="card" aria-label="Badges" style="margin-bottom:16px"><div class="row between" style="margin-bottom:14px;flex-wrap:wrap;gap:8px"><h2 style="font-size:20px;margin:0">SideQuest badges</h2><span class="muted small">Tap a badge to see how to unlock it</span></div><div class="sq-badges">${BADGES.map(b=>{const on=b.lvl<=lvl;return `<button type="button" class="sq-badge ${on?'':'locked'}" data-sq-badge="${b.lvl}" aria-label="${esc(b.name)}, ${on?'unlocked':'locked, unlocks at level '+b.lvl}">${badgeSVG(b)}<strong>${esc(b.name)}</strong><span class="pill ${on?'on':'off'}">${on?'Unlocked':'🔒 Level '+b.lvl}</span></button>`}).join('')}</div></section>
+ <section class="card" aria-label="Recent XP"><h2 style="font-size:20px;margin:0 0 10px">Recent XP</h2>${log.length?`<ul class="sq-xp-log">${log.map(r=>`<li><span>${r.source_type==='verified_report'?'Report verified':r.source_type==='confirmed_issue'?'Confirmation approved':esc(r.source_type)}</span><strong>+${esc(r.points)} XP</strong></li>`).join('')}</ul>`:'<p class="muted small">No XP yet. Make a report or tap “I experienced this too” on an existing one. You’ll get XP once a coordinator verifies it.</p>'}<div class="row wrap" style="gap:10px;margin-top:14px"><button class="btn" data-go="report">Make a report</button><button class="btn btn-white" data-go="explore">See reported concerns</button></div></section></div>`};
+function badgeModal(l){const b=BADGES.find(x=>x.lvl===+l);if(!b)return;const lvl=Math.floor((Number(state.user?.xp)||0)/100)+1,on=b.lvl<=lvl;const need=Math.max(0,(b.lvl-1)*100-(Number(state.user?.xp)||0));
+ openModal(`<div class="sq-badge-modal">${badgeSVG(b,true)}<h2 id="modalTitle" style="margin:8px 0 4px">${esc(b.name)}</h2><p class="intro">${esc(b.desc)}</p><p style="font-weight:800;color:${on?'#16703f':'#5f5f5a'}">${on?'✓ Unlocked':`🔒 Unlocks at Level ${b.lvl} · ${need} more XP`}</p><div class="modal-actions" style="justify-content:center"><button class="btn btn-white" data-close>Close</button></div></div>`)}
+
+/* ---------- admin ---------- */
+function fixAdmin(){qa('.sq-admin-metrics > *').forEach((c,i)=>{if(!c.dataset.sqTone){c.dataset.sqTone='1';const tag=['⏳ ','🙋 ','🔧 ','✅ '][i];const lbl=c.querySelector('span,small,p,h3');if(lbl&&tag&&!lbl.textContent.startsWith(tag))lbl.textContent=tag+lbl.textContent}})}
+
+/* ---------- wiring ---------- */
+function apply(){try{fixBrand();buildSettings();if(state.page==='home')fixHome();if(state.page==='explore')fixExplore();if(state.page==='report')fixReport();if(state.page==='track')fixTrack();if(state.page==='admin')fixAdmin()}catch(e){console.warn('SideQuest cleanup',e)}}
+let t=null;const mo=new MutationObserver(()=>{clearTimeout(t);t=setTimeout(apply,30)});
+mo.observe(document.body,{childList:true,subtree:true});
+const _r=window.render||render;window.render=async function(){await _r.apply(this,arguments);apply()};try{render=window.render}catch(_){}
+window.addEventListener('click',async e=>{
+ const el=e.target.closest('button,a');if(!el)return;
+ if(el.id==='sqSettingsBtn'){e.preventDefault();e.stopImmediatePropagation();openMenu(q('#sqSettingsMenu').hidden);return}
+ if(el.dataset.sqm){e.preventDefault();e.stopImmediatePropagation();return menuAction(el.dataset.sqm)}
+ if(el.id==='v11SaveDraft'){e.preventDefault();e.stopImmediatePropagation();return saveDraft()}
+ if(el.id==='v11RestoreDraft'){e.preventDefault();e.stopImmediatePropagation();return restoreDraft()}
+ if(el.dataset.sqDropphoto!==undefined){e.preventDefault();state.sqDraftPhoto=null;q('.sq-draft-photo')?.remove();return}
+ if(el.dataset.sqAllreports!==undefined){e.preventDefault();e.stopImmediatePropagation();return allReports()}
+ if(el.dataset.sqScroll){e.preventDefault();q(el.dataset.sqScroll==='list'?'#sqConcernList':'#sqRadar')?.scrollIntoView({behavior:'smooth',block:'start'});return}
+ if(el.dataset.sqGo){e.preventDefault();e.stopImmediatePropagation();return go(el.dataset.sqGo)}
+ if(el.dataset.v12Rewards!==undefined){e.preventDefault();e.stopImmediatePropagation();if(!state.user)return authModal('login');return go('rewards')}
+ if(el.dataset.sqBadge){e.preventDefault();return badgeModal(el.dataset.sqBadge)}
+ if(el.dataset.issue&&q('#sqAllList')&&el.closest('#sqAllList'))closeModal();
+ if(el.dataset.confirm&&el.closest('#sqAllList'))closeModal();
+},true);
+document.addEventListener('click',e=>{const m=q('#sqSettingsMenu');if(m&&!m.hidden&&!e.target.closest('.sq-settings-wrap'))openMenu(false)});
+document.addEventListener('keydown',e=>{const m=q('#sqSettingsMenu');if(e.key==='Escape'&&m&&!m.hidden){openMenu(false);q('#sqSettingsBtn')?.focus()}
+ if(m&&!m.hidden&&['ArrowDown','ArrowUp'].includes(e.key)){const items=qa('button',m),i=items.indexOf(document.activeElement);const n=items[(i+(e.key==='ArrowDown'?1:-1)+items.length)%items.length];n?.focus();e.preventDefault()}});
+document.addEventListener('input',e=>{if(e.target.id==='sqAllSearch'){const v=e.target.value.toLowerCase().trim();qa('#sqAllList .sq-all-item').forEach(x=>x.hidden=v&&!x.dataset.sqItem.includes(v))}});
+/* draft photo goes with the report when no new file is chosen */
+const _hr=window.handleReport;
+if(typeof _hr==='function'){window.handleReport=async function(e){const form=e.target;if(state.sqDraftPhoto&&!form.elements.photo?.files?.length){const orig=window.api||api;const wrapped=async(path,opt)=>{if(path==='/api/reports'&&opt?.body instanceof FormData&&!opt.body.get('evidence_preview'))opt.body.set('evidence_preview',state.sqDraftPhoto);return orig(path,opt)};try{api=wrapped}catch(_){}try{await _hr.call(this,e)}finally{try{api=orig}catch(_){}}if(state.form?.done){state.sqDraftPhoto=null;try{localStorage.removeItem(DKEY())}catch(_){}}return}
+ await _hr.call(this,e);if(state.form?.done){try{localStorage.removeItem(DKEY())}catch(_){}}};try{handleReport=window.handleReport}catch(_){}}
+apply();
 })();
 </script>
 </body></html>
